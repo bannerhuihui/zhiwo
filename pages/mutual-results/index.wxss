@@ -235,7 +235,7 @@ page {
   pointer-events: none;
 }
 
-/* 「|->」分界标：竖杠 + 横杠 + 小箭头 */
+/* 分界标：竖杠；左多则「<-|」，右多则「|->」，50/50 仅竖杠（splitHeavy 为 even） */
 .dim-split-mark {
   display: flex;
   flex-direction: row;
@@ -255,6 +255,13 @@ page {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.dim-split-tee--left {
+  margin-right: 1rpx;
+}
+
+.dim-split-tee--right {
   margin-left: 1rpx;
 }
 
@@ -267,7 +274,7 @@ page {
   box-shadow: 0 0 4rpx rgba(0, 0, 0, 0.1);
 }
 
-.dim-split-arrowhead {
+.dim-split-arrowhead--right {
   flex-shrink: 0;
   width: 0;
   height: 0;
@@ -275,6 +282,17 @@ page {
   border-top: 6rpx solid transparent;
   border-bottom: 6rpx solid transparent;
   border-left: 8rpx solid rgba(255, 255, 255, 0.95);
+  filter: drop-shadow(0 0 3rpx rgba(0, 0, 0, 0.12));
+}
+
+.dim-split-arrowhead--left {
+  flex-shrink: 0;
+  width: 0;
+  height: 0;
+  margin-right: -1rpx;
+  border-top: 6rpx solid transparent;
+  border-bottom: 6rpx solid transparent;
+  border-right: 8rpx solid rgba(255, 255, 255, 0.95);
   filter: drop-shadow(0 0 3rpx rgba(0, 0, 0, 0.12));
 }
 

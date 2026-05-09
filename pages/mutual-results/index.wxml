@@ -67,10 +67,14 @@
           <view class="dim-bar" style="background: {{item.grad}};">
             <view class="dim-split-wrap" style="left: {{item.leftPercent}}%;">
               <view class="dim-split-mark" aria-hidden="true">
-                <view class="dim-split-v"></view>
-                <view wx:if="{{!item.splitEven}}" class="dim-split-tee">
+                <view wx:if="{{item.splitHeavy === 'left'}}" class="dim-split-tee dim-split-tee--left">
+                  <view class="dim-split-arrowhead dim-split-arrowhead--left"></view>
                   <view class="dim-split-h"></view>
-                  <view class="dim-split-arrowhead"></view>
+                </view>
+                <view class="dim-split-v"></view>
+                <view wx:if="{{item.splitHeavy === 'right'}}" class="dim-split-tee dim-split-tee--right">
+                  <view class="dim-split-h"></view>
+                  <view class="dim-split-arrowhead dim-split-arrowhead--right"></view>
                 </view>
               </view>
             </view>

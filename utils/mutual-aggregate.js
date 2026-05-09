@@ -150,12 +150,17 @@ function buildDimRows(list) {
     const lc = counts[leftKey] || 0
     const rc = counts[rightKey] || 0
     const splitEven = lc === rc && lc + rc > 0
+    let splitHeavy = 'even'
+    if (!splitEven) {
+      if (lc > rc) splitHeavy = 'left'
+      else if (rc > lc) splitHeavy = 'right'
+    }
     return {
       leftLabel,
       rightLabel,
       leftPercent: Math.round((lc / total) * 100),
       rightPercent: Math.round((rc / total) * 100),
-      splitEven,
+      splitHeavy,
       /** 整段渐变字符串，避免 WXML 里 {{item.colors[0]}} 在 Skyline 下不生效 */
       grad: `linear-gradient(90deg, ${c0}, ${c1})`,
     }
