@@ -1,0 +1,19 @@
+<view class="page">
+  <image class="layer-bg" src="/images/index.png" mode="aspectFill" aria-hidden="true" />
+
+  <view class="ui-layer">
+    <view class="body">
+      <view class="copy-block">
+        <text class="lead">你正在为「{{ownerName}}」完成对方发起的互测，请根据你对 TA 的了解如实选择。</text>
+        <text class="hint">若你也想测一测自己的类型，可先点击下方「进入主页」回到首页，再选择自测入口参与测试。</text>
+      </view>
+
+      <view class="actions">
+        <view class="btn-lemon" bindtap="onStartMutual">开始互测</view>
+        <view class="btn-lemon btn-second" bindtap="onGoHome">进入主页</view>
+      </view>
+
+      <view class="notice">测试结果仅供娱乐，不具有任何指向性及指导性，请玩家适度娱乐。</view>
+    </view>
+  </view>
+</view>

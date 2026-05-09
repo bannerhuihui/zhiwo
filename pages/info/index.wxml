@@ -1,0 +1,54 @@
+<view class="page">
+  <image class="bg" src="/images/question.png" mode="aspectFill" />
+  <view class="mask"></view>
+
+  <view class="stack">
+    <navigation-bar title="性格类型说明" back="{{true}}" color="rgba(0,0,0,0.78)" background="transparent"></navigation-bar>
+
+    <view class="dimension-line">E/I内外向  S/N实感直觉  T/F思考情感  J/P判断知觉</view>
+
+    <scroll-view scroll-y class="main-scroll" enhanced show-scrollbar="{{false}}">
+      <view class="qy-scroll-fill" style="min-height: {{scrollInnerMinPx}}px;">
+        <view class="qy-scroll-fill__grow"></view>
+        <view class="qy-scroll-fill__main">
+      <view class="info-card">
+        <view class="index-pill">{{pillText}}</view>
+
+        <view class="type-row">
+          <text class="type-code">{{item.type}}</text>
+          <text class="type-alias">{{item.alias}}</text>
+        </view>
+
+        <view class="keyword-row">
+          <view class="kw" wx:for="{{item.keywords}}" wx:for-item="kw" wx:key="*this">{{kw}}</view>
+        </view>
+
+        <view class="section">
+          <text class="section-title">类型简介</text>
+          <text class="section-body">{{item.summary}}</text>
+        </view>
+        <view class="section">
+          <text class="section-title">性格优势</text>
+          <text class="section-body">{{item.strengths}}</text>
+        </view>
+        <view class="section">
+          <text class="section-title">适合方向</text>
+          <text class="section-body">{{item.fit}}</text>
+        </view>
+      </view>
+
+      <view class="type-nav">
+        <view class="type-nav-btn" bindtap="onPrev">上一型</view>
+        <view class="type-nav-btn" bindtap="onNext">下一型</view>
+      </view>
+
+      <view class="scroll-footer-spacer"></view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="bottom-bar safe-bottom">
+      <view class="home-btn" bindtap="onHome">回到首页</view>
+    </view>
+  </view>
+</view>

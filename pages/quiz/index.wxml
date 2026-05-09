@@ -1,0 +1,67 @@
+<view class="quiz-root">
+  <!-- 全屏底图含状态栏/导航条区域，避免仅 page 内铺图时顶部露出纯色 -->
+  <view class="quiz-bg-stack" wx:if="{{quizReady}}">
+    <image class="quiz-bg-img" src="/images/question.png" mode="aspectFill" aria-hidden="true" />
+    <view class="quiz-bg-mask"></view>
+  </view>
+
+  <navigation-bar
+    extClass="quiz-nav-layer"
+    title="{{navTitle}}"
+    back="{{true}}"
+    color="rgba(129,124,124,0.95)"
+    background="transparent"
+  ></navigation-bar>
+
+  <view class="page" wx:if="{{quizReady}}">
+    <view class="content">
+      <view class="mode-ad-card" bindtap="onOpenQrModal" hover-class="mode-ad-card--hover" hover-stay-time="80">
+        <swiper
+          class="mode-ad-swiper"
+          autoplay="{{true}}"
+          circular="{{true}}"
+          interval="{{3500}}"
+          duration="{{500}}"
+          indicator-dots="{{false}}"
+        >
+          <swiper-item>
+            <image class="mode-ad-slide-img" src="/images/image-01.png" mode="aspectFill" />
+          </swiper-item>
+          <swiper-item>
+            <image class="mode-ad-slide-img" src="/images/image-02.png" mode="aspectFill" />
+          </swiper-item>
+        </swiper>
+      </view>
+
+      <view class="pill-track">
+        <view class="pill-fill {{pillFillFull ? 'pill-fill--full' : ''}}" style="width: {{progressPercent}}%;"></view>
+        <view class="pill-label">余{{remaining}}题</view>
+      </view>
+
+      <view wx:if="{{mutualHint}}" class="mutual-hint">在你看来，{{mutualTargetName}} 会更像哪一种？</view>
+      <view class="question {{mutualHint ? 'after-hint' : 'from-pill'}}">{{questionText}}</view>
+
+      <view class="opt lemon" bindtap="chooseA" hover-class="none">{{optionAText}}</view>
+      <view class="opt mint" bindtap="chooseB" hover-class="none">{{optionBText}}</view>
+
+      <view class="prev {{prevDisabled ? 'prev--disabled' : ''}}" bindtap="prev">上一题</view>
+    </view>
+  </view>
+
+  <view
+    class="qr-modal"
+    wx:if="{{quizReady && qrModalVisible}}"
+    catchtouchmove="onQrModalMove"
+  >
+    <view class="qr-modal__mask" catchtap="onCloseQrModal"></view>
+    <view class="qr-modal__panel">
+      <image
+        class="qr-modal__img"
+        src="/images/image-other.png"
+        mode="aspectFit"
+        show-menu-by-longpress="{{true}}"
+      />
+      <text class="qr-modal__tip">长按识别二维码，进入ADE+文创商城</text>
+    </view>
+  </view>
+</view>

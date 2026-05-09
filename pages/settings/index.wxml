@@ -1,0 +1,26 @@
+<view class="page">
+  <image class="layer-bg" src="/images/question.png" mode="aspectFill" aria-hidden="true" />
+  <view class="mask"></view>
+
+  <view class="stack">
+    <navigation-bar title="设置" back="{{true}}" color="rgba(0,0,0,0.78)" background="transparent"></navigation-bar>
+
+    <scroll-view scroll-y class="main-scroll" enhanced show-scrollbar="{{false}}">
+      <view class="set-card">
+        <text class="set-card-title">清除本地缓存</text>
+        <text class="set-card-desc">仅清理当前设备上的字体缓存和本地存储，不会删除云端测试记录。</text>
+        <view class="set-btn-clear" bindtap="onClearCache">清除本地缓存</view>
+      </view>
+      <view class="set-card set-card-spaced">
+        <text class="set-card-title">清除云端测试数据</text>
+        <text class="set-card-desc">删除服务器上您的全部自测与互测结果，以及您发出的测评邀请。头像与昵称保留。</text>
+        <view class="set-btn-wipe" bindtap="onClearCloudTestData">清除云端测试数据</view>
+      </view>
+      <view class="scroll-pad"></view>
+    </scroll-view>
+
+    <view class="bottom safe-bottom">
+      <view class="btn-home" bindtap="onGoHome">返回首页</view>
+    </view>
+  </view>
+</view>

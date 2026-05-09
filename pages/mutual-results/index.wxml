@@ -1,0 +1,101 @@
+<view class="page">
+  <image class="bg" src="/images/question.png" mode="aspectFill" />
+  <view class="mask"></view>
+
+  <view class="stack stack--loading" wx:if="{{loading}}">
+    <navigation-bar
+      extClass="quiz-nav-layer"
+      title="朋友们眼中的你"
+      back="{{true}}"
+      color="rgba(0,0,0,0.72)"
+      background="transparent"
+    ></navigation-bar>
+    <view class="loading-tip">加载中…</view>
+  </view>
+
+  <view class="stack" wx:if="{{!loading && showContent}}">
+    <navigation-bar
+      extClass="quiz-nav-layer"
+      title="朋友们眼中的你"
+      back="{{true}}"
+      color="rgba(0,0,0,0.72)"
+      background="transparent"
+    ></navigation-bar>
+
+    <scroll-view scroll-y class="scroll" enhanced show-scrollbar="{{false}}">
+      <view class="qy-scroll-fill" style="min-height: {{scrollInnerMinPx}}px;">
+        <view class="qy-scroll-fill__grow"></view>
+        <view class="qy-scroll-fill__main">
+      <view class="sub-line" wx:if="{{showSelfSub}}">你的自测结果：{{selfType}}</view>
+
+      <!-- 全部汇总：有过渡页数据卡 -->
+      <view wx:if="{{modeAll && hasSummaryData}}" class="summary-card">
+        <view class="sum-head" wx:if="{{composite}}">
+          <view class="sum-type-row sum-type-row--type">
+            <view class="sum-type sum-type--split">
+              <text
+                wx:for="{{compositeParts}}"
+                wx:for-item="ch"
+                wx:for-index="cpi"
+                wx:key="cpi"
+                class="sum-type-ch {{ch.disputed ? 'sum-type-ch--disputed' : ''}}"
+              >{{ch.text}}</text>
+            </view>
+            <text class="sum-alias" wx:if="{{aliasTop}}">{{aliasTop}}</text>
+          </view>
+          <view wx:if="{{showTfControversyHint}}" class="sum-tf-hint">
+            看来朋友眼中的您，颇具争议性，建议您请更多的朋友，来进行更多的性格画像。
+          </view>
+        </view>
+        <view wx:else class="sum-weak">暂无足够数据生成综合类型</view>
+
+        <text wx:if="{{showTopTypes}}" class="sum-freq">{{topTypesText}}</text>
+
+        <view class="sum-block-title">朋友结果汇总</view>
+        <text class="sum-block-sub">共 {{totalFriends}} 位朋友完成互测</text>
+
+        <view class="pill-grid">
+          <view class="pill-row" wx:for="{{pillPairs}}" wx:for-item="pair" wx:for-index="pr" wx:key="pr">
+            <view class="pill-cell {{row.pillTone}}" wx:for="{{pair}}" wx:for-item="row" wx:key="leftLabel">
+              <text class="pill-text">{{row.leftLabel}} {{row.leftCount}} / {{row.rightLabel}} {{row.rightCount}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="dim-cap">维度倾向</view>
+        <view class="dim-row" wx:for="{{dimRows}}" wx:key="leftLabel">
+          <view class="dim-bar" style="background: {{item.grad}};">
+            <view class="dim-split-wrap" style="left: {{item.leftPercent}}%;">
+              <view class="dim-split-mark" aria-hidden="true">
+                <view class="dim-split-v"></view>
+                <view wx:if="{{!item.splitEven}}" class="dim-split-tee">
+                  <view class="dim-split-h"></view>
+                  <view class="dim-split-arrowhead"></view>
+                </view>
+              </view>
+            </view>
+          </view>
+          <view class="dim-labels">
+            <text class="dim-l">{{item.leftLabel}} {{item.leftPercent}}%</text>
+            <text class="dim-r">{{item.rightPercent}}% {{item.rightLabel}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 单条无互测 / 全部无互测 -->
+      <view wx:if="{{!hasSummaryData}}" class="empty-card">
+        <text class="empty-title">还没有朋友完成互测</text>
+        <text class="empty-desc">先去邀请朋友，完成后就能在这里看到对比分析</text>
+      </view>
+
+      <view class="scroll-pad"></view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="bottom safe-bottom">
+      <view class="btn-lemon" bindtap="onPrimaryTap">{{primaryBtnText}}</view>
+      <view class="btn-lemon btn-gap" bindtap="onHome">返回首页</view>
+    </view>
+  </view>
+</view>

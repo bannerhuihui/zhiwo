@@ -1,0 +1,239 @@
+page {
+  height: 100%;
+  min-height: 100vh;
+  background: #f7f2df;
+}
+
+.quiz-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+/* fixed 铺满视口，与下方内容共用同一 question.png，导航透明时可透出 */
+.quiz-bg-stack {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.quiz-bg-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.quiz-bg-mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  padding: 16rpx 36rpx 48rpx;
+  box-sizing: border-box;
+}
+
+.mode-ad-card {
+  margin-top: 8rpx;
+  border-radius: 36rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 20rpx 36rpx rgba(0, 0, 0, 0.14);
+  overflow: hidden;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.mode-ad-card--hover {
+  opacity: 0.92;
+}
+
+.mode-ad-swiper {
+  width: 100%;
+  height: 200rpx;
+}
+
+.mode-ad-slide-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.qr-modal {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.qr-modal__mask {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.48);
+}
+
+.qr-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: 580rpx;
+  max-width: calc(100vw - 80rpx);
+  padding: 32rpx 32rpx 36rpx;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 32rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 24rpx 48rpx rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+
+.qr-modal__img {
+  display: block;
+  width: 400rpx;
+  height: 400rpx;
+  margin: 0 auto 28rpx;
+}
+
+.qr-modal__tip {
+  display: block;
+  font-size: 30rpx;
+  line-height: 1.55;
+  color: rgba(0, 0, 0, 0.62);
+  text-align: center;
+}
+
+.pill-track {
+  position: relative;
+  margin: 44rpx auto 0;
+  width: calc(100% - 160rpx);
+  max-width: 600rpx;
+  height: 104rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.7);
+  border: 2rpx solid rgba(160, 215, 194, 0.95);
+  box-shadow: 0 16rpx 32rpx rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.pill-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 52rpx 0 0 52rpx;
+  background: linear-gradient(
+    90deg,
+    rgba(198, 240, 219, 0.85) 0%,
+    rgba(255, 245, 206, 0.8) 100%
+  );
+  max-width: 100%;
+}
+
+.pill-fill--full {
+  border-radius: 999rpx;
+}
+
+.pill-label {
+  position: relative;
+  z-index: 1;
+  height: 104rpx;
+  line-height: 104rpx;
+  text-align: center;
+  font-size: 48rpx;
+  font-weight: 700;
+  color: rgba(129, 124, 124, 0.95);
+}
+
+.mutual-hint {
+  margin-top: 104rpx;
+  margin-bottom: 56rpx;
+  font-size: 34rpx;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.question {
+  font-size: 56rpx;
+  line-height: 1.35;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.question.from-pill {
+  margin-top: 104rpx;
+}
+
+.question.after-hint {
+  margin-top: 0;
+}
+
+.opt {
+  margin-top: 44rpx;
+  border-radius: 999rpx;
+  min-height: 156rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0, 0, 0, 0.55);
+  border: 2rpx solid rgba(255, 255, 255, 0.9);
+  font-size: 44rpx;
+  font-weight: 700;
+  line-height: 1.35;
+  white-space: normal;
+  padding: 24rpx 40rpx;
+  box-sizing: border-box;
+}
+
+.opt.lemon {
+  background: rgba(255, 245, 206, 0.95);
+}
+
+.opt.mint {
+  background: rgba(198, 240, 219, 0.92);
+}
+
+.prev {
+  margin-top: 48rpx;
+  text-align: center;
+  color: rgba(129, 124, 124, 0.9);
+  font-size: 44rpx;
+  line-height: 1.2;
+  text-decoration: underline;
+  text-decoration-color: rgba(129, 124, 124, 0.85);
+  text-underline-offset: 10rpx;
+}
+
+.prev--disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}

@@ -1,0 +1,47 @@
+<view class="page">
+  <image class="bg" src="/images/question.png" mode="aspectFill" />
+  <view class="mask"></view>
+
+  <view class="stack">
+    <navigation-bar title="测试记录" back="{{true}}" color="rgba(0,0,0,0.72)" background="transparent"></navigation-bar>
+
+    <view class="subtitle">查看你的类型标签与朋友互测结果</view>
+
+    <scroll-view scroll-y class="list-scroll" enhanced show-scrollbar="{{false}}">
+      <view class="qy-scroll-fill" style="min-height: {{scrollInnerMinPx}}px;">
+        <view class="qy-scroll-fill__grow"></view>
+        <view class="qy-scroll-fill__main">
+      <view wx:if="{{!recordRows.length}}" class="empty-hint">暂无测试记录</view>
+      <block wx:for="{{recordRows}}" wx:key="id">
+        <view class="rec-card">
+          <view class="rec-main">
+            <view class="rec-topline">
+              <text class="rec-type">{{item.typeCode}}</text>
+              <text class="rec-alias">{{item.alias}}</text>
+            </view>
+            <view class="rec-tags" wx:if="{{item.keywords.length}}">
+              <view class="tag" wx:for="{{item.keywords}}" wx:for-item="kw" wx:key="*this">{{kw}}</view>
+            </view>
+            <view class="rec-mutual-row">
+              <text class="rec-mutual-total">互测 {{item.mutualTotal}}条</text>
+              <text wx:if="{{item.showToday}}" class="rec-mutual-today">今日 {{item.todayCount}}条</text>
+            </view>
+            <text class="rec-time">{{item.timeText}}</text>
+          </view>
+          <view class="rec-actions">
+            <view class="btn-mutual" data-id="{{item.id}}" bindtap="onOpenMutual">看互测</view>
+            <view class="btn-info" data-type="{{item.typeCode}}" bindtap="onOpenInfo">看说明</view>
+          </view>
+        </view>
+      </block>
+      <view class="list-footer-spacer"></view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="bottom-actions safe-bottom">
+      <view class="action-lemon" bindtap="onMutualAll">{{mutualAllBtnLabel}}</view>
+      <view class="action-lemon" bindtap="onHome">回到首页</view>
+    </view>
+  </view>
+</view>

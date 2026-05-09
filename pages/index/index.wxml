@@ -1,0 +1,88 @@
+<view class="page">
+  <image class="layer-bg" src="/images/index.png" mode="aspectFill" />
+
+  <!-- 主界面：已登录且有资料 -->
+  <block wx:if="{{showMain}}">
+    <view class="ui-main">
+      <view class="gear-wrap" bindtap="openSettings">
+        <view class="gear-circle gear-circle--light">
+          <image class="gear-icon" src="/images/settings.png" mode="aspectFit" />
+        </view>
+      </view>
+      <view class="hero-zone">
+        <view class="brand-substack">
+          <view class="brand-de">之</view>
+          <view class="brand-subtitle">性格测试</view>
+        </view>
+      </view>
+      <view class="footer-block">
+        <view class="btn-main" bindtap="startSelf">开始自测</view>
+        <view class="btn-main {{recordsEmpty ? 'is-disabled' : ''}}" bindtap="startMutual">朋友测评</view>
+        <view class="link-row">
+          <text class="link-t left" bindtap="openRecords">测试记录</text>
+          <text class="link-t right" bindtap="openInfo">性格类型说明</text>
+        </view>
+        <view class="notice-line">测试结果仅供娱乐，不具有任何指向性及指导性，请玩家适度娱乐。</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 加载中（drawLoadingPill） -->
+  <view class="ui-loading" wx:if="{{showLoading}}">
+    <view class="gear-wrap gear-loading" bindtap="openSettings">
+      <view class="gear-circle gear-circle--light">
+        <image class="gear-icon" src="/images/settings.png" mode="aspectFit" />
+      </view>
+    </view>
+    <view class="loading-dim"></view>
+    <view class="loading-card">
+      <text class="loading-title">加载中</text>
+      <view class="loading-track">
+        <view class="loading-fill"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 登录失败（drawOverlayCard + 重新登录） -->
+  <view class="ui-overlay" wx:if="{{showAuthFail}}">
+    <view class="gear-wrap" bindtap="openSettings">
+      <view class="gear-circle gear-circle--light">
+        <image class="gear-icon" src="/images/settings.png" mode="aspectFit" />
+      </view>
+    </view>
+    <view class="overlay-dim"></view>
+    <view class="overlay-card">
+      <view class="overlay-pill">需要处理</view>
+      <text class="overlay-h1">登录失败</text>
+      <text class="overlay-p" wx:for="{{authFailLines}}" wx:key="*this">{{item}}</text>
+      <view class="overlay-btn-gradient" bindtap="retryLogin">重新登录</view>
+    </view>
+  </view>
+
+  <!-- 首次进入：微信原生能力 chooseAvatar + nickname，写库后进主页 -->
+  <view class="ui-overlay" wx:if="{{showProfileGate}}">
+    <view class="gear-wrap" bindtap="openSettings">
+      <view class="gear-circle gear-circle--light">
+        <image class="gear-icon" src="/images/settings.png" mode="aspectFit" />
+      </view>
+    </view>
+    <view class="overlay-dim"></view>
+    <view class="overlay-card profile-gate-card">
+      <text class="profile-gate-title">头像与昵称</text>
+      <view class="profile-native">
+        <button class="profile-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+          <image wx:if="{{profileAvatarDraft}}" class="profile-avatar-img" src="{{profileAvatarDraft}}" mode="aspectFill" />
+          <text wx:else class="profile-avatar-placeholder">选择头像</text>
+        </button>
+        <input
+          class="profile-nick-input"
+          type="nickname"
+          placeholder="点击填写昵称"
+          value="{{profileNickDraft}}"
+          bindinput="onNicknameInput"
+        />
+      </view>
+      <view class="overlay-btn-gradient profile-gate-submit" bindtap="onSaveProfileForm">完成</view>
+    </view>
+  </view>
+</view>

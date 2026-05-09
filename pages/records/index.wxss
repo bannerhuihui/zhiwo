@@ -1,0 +1,224 @@
+@import '../../styles/code-theme.wxss';
+
+page {
+  height: 100%;
+  min-height: 100vh;
+  background: var(--qy-page-tint);
+}
+
+.page {
+  position: relative;
+  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.stack {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+/* 与 code records.js 副标题位置、字号对应 s(16) + textMute */
+.subtitle {
+  padding: 8rpx 40rpx 20rpx;
+  font-size: 32rpx;
+  line-height: 1.4;
+  color: var(--qy-text-mute);
+}
+
+.list-scroll {
+  flex: 1;
+  min-height: 0;
+  height: 0;
+  padding: 0 40rpx;
+  box-sizing: border-box;
+}
+
+.empty-hint {
+  padding: 48rpx 0;
+  text-align: center;
+  font-size: 30rpx;
+  color: var(--qy-text-mute);
+}
+
+/* 卡片：白半透明、圆角 s(24)、阴影，与 drawRoundedRect 一致 */
+.rec-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 300rpx;
+  margin-bottom: 28rpx;
+  padding: 28rpx 32rpx 28rpx 36rpx;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.74);
+  border-radius: 48rpx;
+  border: 2rpx solid var(--qy-card-stroke);
+  box-shadow: 0 16rpx 16rpx rgba(0, 0, 0, 0.12);
+}
+
+.rec-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.rec-topline {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8rpx 20rpx;
+}
+
+/* s(34) 类型 + s(20) 别名，别名相对 contentX+s(104) 在 flex 里用间距近似 */
+.rec-type {
+  font-size: 68rpx;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.82);
+  line-height: 1.1;
+}
+
+.rec-alias {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+  line-height: 1.2;
+}
+
+.rec-tags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-top: 12rpx;
+}
+
+.tag {
+  padding: 0 20rpx;
+  height: 56rpx;
+  line-height: 56rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  background: var(--qy-lemon);
+  color: var(--qy-link-strong);
+  box-sizing: border-box;
+}
+
+.rec-mutual-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin-top: 20rpx;
+  gap: 0 16rpx;
+}
+
+.rec-mutual-total {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: rgba(120, 106, 97, 0.72);
+}
+
+.rec-mutual-today {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--qy-today-red);
+}
+
+.rec-time {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 32rpx;
+  color: var(--qy-text-mute);
+}
+
+/* 右侧按钮列：垂直居中，与 code btnStack 一致 */
+.rec-actions {
+  flex-shrink: 0;
+  width: 192rpx;
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16rpx;
+}
+
+.btn-mutual {
+  height: 84rpx;
+  line-height: 84rpx;
+  text-align: center;
+  border-radius: 999rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+  background: linear-gradient(90deg, rgba(213, 241, 228, 0.98), rgba(255, 241, 207, 0.98));
+  border: 2rpx solid rgba(176, 214, 198, 0.95);
+  box-sizing: border-box;
+}
+
+.btn-info {
+  height: 84rpx;
+  line-height: 84rpx;
+  text-align: center;
+  border-radius: 999rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+  background: rgba(255, 255, 255, 0.9);
+  border: 2rpx solid rgba(224, 214, 182, 0.95);
+  box-sizing: border-box;
+}
+
+/* 列表与底部按钮区留白，对应 code listGapAboveBottomBtns s(16) + 按钮高度 */
+.list-footer-spacer {
+  height: 24rpx;
+}
+
+.bottom-actions {
+  flex-shrink: 0;
+  padding: 16rpx 40rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  box-sizing: border-box;
+}
+
+.safe-bottom {
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+
+.action-lemon {
+  height: 104rpx;
+  line-height: 104rpx;
+  text-align: center;
+  border-radius: 999rpx;
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+  background: var(--qy-lemon);
+  border: 2rpx solid var(--qy-card-stroke);
+  box-sizing: border-box;
+}

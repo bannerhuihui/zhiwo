@@ -1,0 +1,41 @@
+<view class="page">
+  <image class="bg" src="/images/question.png" mode="aspectFill" />
+  <view class="mask"></view>
+
+  <view class="stack">
+    <navigation-bar title="知我几分分析" back="{{true}}" color="rgba(0,0,0,0.78)" background="rgba(247,242,223,0.92)"></navigation-bar>
+
+    <scroll-view scroll-y class="scroll" enhanced show-scrollbar="{{false}}">
+      <view class="qy-scroll-fill" style="min-height: {{scrollInnerMinPx}}px;">
+        <view class="qy-scroll-fill__grow"></view>
+        <view class="qy-scroll-fill__main">
+      <view class="card card-types">
+        <view class="types-row">
+          <view class="types-col">
+            <text class="types-label">你的自测</text>
+            <text class="types-code">{{selfType}}</text>
+          </view>
+          <view class="types-col types-col--right">
+            <text class="types-label">{{friendName}}眼中的你</text>
+            <text class="types-code">{{mutualType}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="card card-score">
+        <text class="score-num">{{score}}%</text>
+        <text class="score-cap">认知贴合度</text>
+        <text class="score-title">{{title}}</text>
+      </view>
+
+      <view class="card card-note">
+        <text class="note-p" wx:for="{{lines}}" wx:key="*this">{{item}}</text>
+      </view>
+
+      <view class="btn-copy" bindtap="onCopy">复制分析文案</view>
+      <view class="scroll-pad"></view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

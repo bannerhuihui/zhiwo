@@ -1,0 +1,58 @@
+@import './styles/code-theme.wxss';
+
+/* 仅使用 loadFontFace 引入的引圆体，不回落系统默认字体栈 */
+page,
+view,
+text,
+button,
+input,
+textarea,
+label,
+navigator {
+  font-family: "QingningRounded";
+}
+
+/* UI 静态壳通用布局（占位页与后续高保真页可复用） */
+.shell-root {
+  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.shell-scroll {
+  flex: 1;
+  min-height: 0;
+  height: 0;
+  box-sizing: border-box;
+}
+
+.shell-page {
+  padding: 24rpx 32rpx 48rpx;
+  box-sizing: border-box;
+}
+
+.shell-title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: bold;
+  color: var(--qy-link-strong);
+  margin-bottom: 16rpx;
+}
+
+.shell-hint {
+  display: block;
+  color: var(--qy-text-mute);
+  font-size: 28rpx;
+  line-height: 1.65;
+  margin-top: 8rpx;
+}
+
+.shell-code-ref {
+  display: block;
+  font-size: 24rpx;
+  color: var(--qy-link);
+  margin-top: 24rpx;
+  word-break: break-all;
+}

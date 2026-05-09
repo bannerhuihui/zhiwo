@@ -1,0 +1,52 @@
+/**
+ * 与 code/minigame/src/ui/theme.js 对齐，供 WXSS 对照还原用。
+ * design 基准宽度约 375px，scene 内字号为 s(XX)；小程序里可用 rpx ≈ px*2 粗调，再以真机微调。
+ */
+page {
+  /* theme.color */
+  --qy-primary: #4b79d8;
+  --qy-mint: rgba(198, 240, 219, 0.92);
+  --qy-lemon: rgba(255, 245, 206, 0.95);
+  --qy-text: rgba(0, 0, 0, 0.85);
+  --qy-text-mute: rgba(0, 0, 0, 0.55);
+  --qy-card-stroke: rgba(255, 255, 255, 0.9);
+  --qy-link: rgba(129, 124, 124, 0.9);
+  --qy-link-strong: rgba(129, 124, 124, 0.95);
+  /* 常用铺底与强调（scene 内硬编码） */
+  --qy-page-tint: #f7f2df;
+  --qy-today-red: #d32f2f;
+  /* 维度条配色（result / mutual-results 与 code 一致） */
+  --qy-dim-ie-0: #d8243f;
+  --qy-dim-ie-1: #3d62b6;
+  --qy-dim-sn-0: #7b39b2;
+  --qy-dim-sn-1: #efb076;
+  --qy-dim-tf-0: #f5bb13;
+  --qy-dim-tf-1: #1480d8;
+  --qy-dim-jp-0: #2a9e9a;
+  --qy-dim-jp-1: #d06d10;
+  /* 互测卡片标签 */
+  --qy-chip-same: #477a61;
+  --qy-chip-diff: #a35d3a;
+  /* 首页渐变条（home / mutual-invite） */
+  --qy-home-grad-0: #f6cdd3;
+  --qy-home-grad-1: #cfeee2;
+  --qy-home-grad-2: #f7f2df;
+}
+
+/* scroll-view 短内容贴底：内层设 min-height(px) + 顶占位 flex 吃满 */
+.qy-scroll-fill {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.qy-scroll-fill__grow {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
+.qy-scroll-fill__main {
+  flex-shrink: 0;
+  width: 100%;
+}

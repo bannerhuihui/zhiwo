@@ -1,0 +1,447 @@
+page {
+  height: 100%;
+  background: #f7f2df;
+}
+
+.page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  /* 仅裁水平方向；竖向若底部区略超高时不裁掉免责文案（iPhone 刘海/灵动岛机型常见） */
+  overflow-x: hidden;
+  overflow-y: visible;
+  box-sizing: border-box;
+}
+
+/* ---- 背景：仅全屏插画，无额外渐变/叠层 ---- */
+.layer-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* ---- 主 UI ---- */
+.ui-main {
+  position: relative;
+  z-index: 4;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.gear-wrap {
+  position: absolute;
+  right: 40rpx;
+  top: calc(160rpx + env(safe-area-inset-top));
+  z-index: 6;
+  width: 84rpx;
+  height: 84rpx;
+}
+
+.gear-circle {
+  width: 84rpx;
+  height: 84rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* 对齐 code/minigame home.js 右上角设置：mint→lemon 渐变圆、绿描边、投影 */
+.gear-circle--light {
+  background: linear-gradient(135deg, rgba(214, 241, 228, 0.96) 0%, rgba(255, 239, 201, 0.94) 100%);
+  border: 2rpx solid rgba(176, 214, 198, 0.95);
+  box-shadow: 0 8rpx 20rpx rgba(98, 126, 116, 0.18);
+}
+
+.gear-icon {
+  width: 56rpx;
+  height: 56rpx;
+  opacity: 0.9;
+}
+
+/* 副标题区：主标题与英文已在 index.png 内，此处只摆「之 / 性格测试」，用 vh 适配不同裁切比例 */
+.hero-zone {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(51vh - 40rpx + env(safe-area-inset-top));
+  padding: 0 40rpx;
+  box-sizing: border-box;
+  text-align: center;
+  z-index: 5;
+}
+
+.brand-line {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.brand-t {
+  line-height: 1.05;
+  display: inline-block;
+}
+
+.brand-black {
+  font-size: 80rpx;
+  font-weight: 800;
+  color: rgba(20, 20, 20, 0.92);
+}
+
+/* 「我」加大 + 橙→红纵向渐变（若基础库不生效，可只看到 color 纯色） */
+.brand-wo {
+  display: inline-block;
+  margin: 0 4rpx;
+  font-size: 112rpx;
+  font-weight: 900;
+  letter-spacing: -2rpx;
+  color: #e0453a;
+  background-image: linear-gradient(180deg, #ff9a4a 0%, #e82c2c 55%, #d42828 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-en {
+  display: block;
+  margin-top: 8rpx;
+  text-align: center;
+  font-size: 26rpx;
+  line-height: 1.35;
+  color: #d93a3a;
+  letter-spacing: 0.5rpx;
+}
+
+.brand-substack {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.brand-de {
+  font-size: 68rpx;
+  line-height: 1.2;
+  color: rgba(140, 134, 130, 0.95);
+  font-weight: 700;
+}
+
+.brand-subtitle {
+  margin-top: 6rpx;
+  font-size: 64rpx;
+  line-height: 1.15;
+  font-weight: 700;
+  color: rgba(140, 134, 130, 0.95);
+}
+
+.footer-block {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* 紧接副标题下方留白，避免与「性格测试」重叠；免责仍用 margin-top:auto 贴底 */
+  top: calc(51vh + 166rpx + env(safe-area-inset-top));
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  /* 主按钮与 code 一致：左右 s(32)→64rpx；链接区再缩进 s(10)→20rpx 使文字约 s(42)→84rpx */
+  padding: 0 64rpx calc(72rpx + constant(safe-area-inset-bottom));
+  padding: 0 64rpx calc(72rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+/* 主按钮：稿图同款 — 淡乳黄底、浅金米色描边、深灰字、轻暖色投影 */
+.btn-main {
+  flex-shrink: 0;
+  height: 128rpx;
+  line-height: 128rpx;
+  text-align: center;
+  border-radius: 999rpx;
+  font-size: 54rpx;
+  font-weight: 600;
+  color: rgba(140, 134, 130, 0.95);
+  background: linear-gradient(180deg, #fffdf6 0%, #fff4dc 48%, #ffefcf 100%);
+  border: 2rpx solid rgba(201, 172, 118, 0.72);
+  box-shadow:
+    0 6rpx 16rpx rgba(120, 90, 50, 0.07),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.65);
+  box-sizing: border-box;
+}
+
+.btn-main + .btn-main {
+  margin-top: 36rpx;
+}
+
+.btn-main.is-disabled {
+  opacity: 0.52;
+}
+
+/* code: link s(20)，左右 s(42)，下划线在 baseline + s(12) */
+.link-row {
+  flex-shrink: 0;
+  margin-top: 64rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 20rpx;
+}
+
+.link-t {
+  font-size: 48rpx;
+  color: rgba(140, 134, 130, 0.95);
+  text-decoration: underline;
+  text-underline-offset: 10rpx;
+  text-decoration-thickness: 2rpx;
+}
+
+.notice-line {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 24rpx;
+  text-align: center;
+  font-size: 26rpx;
+  line-height: 1.45;
+  color: rgba(140, 134, 130, 0.95);
+  padding-left: 12rpx;
+  padding-right: 12rpx;
+}
+
+/* ---- 加载遮罩 ---- */
+.ui-loading {
+  position: relative;
+  z-index: 5;
+  height: 100vh;
+}
+
+.gear-loading {
+  z-index: 8;
+}
+
+.loading-dim {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 250, 244, 0.18);
+  z-index: 5;
+}
+
+.loading-card {
+  position: absolute;
+  left: 50%;
+  bottom: 456rpx;
+  transform: translateX(-50%);
+  width: calc(100% - 240rpx);
+  padding: 36rpx 36rpx 40rpx;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.66);
+  border-radius: 44rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 12rpx 28rpx rgba(0, 0, 0, 0.12);
+  z-index: 7;
+}
+
+.loading-title {
+  display: block;
+  text-align: center;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: rgba(106, 94, 87, 0.96);
+  margin-bottom: 24rpx;
+}
+
+.loading-track {
+  height: 32rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.5);
+  border: 2rpx solid rgba(255, 255, 255, 0.72);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.loading-fill {
+  width: 72%;
+  height: 100%;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, rgba(213, 241, 228, 0.96), rgba(255, 241, 207, 0.96));
+}
+
+/* ---- 登录失败 / 首次进入 弹层（drawOverlayCard） ---- */
+.ui-overlay {
+  position: relative;
+  z-index: 5;
+  height: 100vh;
+}
+
+.overlay-dim {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(74, 63, 57, 0.26);
+  z-index: 5;
+}
+
+.overlay-card {
+  position: absolute;
+  left: 50%;
+  bottom: 640rpx;
+  transform: translateX(-50%);
+  width: calc(100% - 96rpx);
+  max-width: 680rpx;
+  padding: 36rpx 36rpx 40rpx;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, rgba(255, 250, 244, 0.96), rgba(251, 244, 233, 0.95));
+  border-radius: 52rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.65);
+  box-shadow: 0 24rpx 24rpx rgba(91, 78, 70, 0.18);
+  z-index: 7;
+}
+
+.overlay-card--short {
+  padding-bottom: 48rpx;
+}
+
+.overlay-pill {
+  display: inline-block;
+  padding: 0 24rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+  background: linear-gradient(90deg, rgba(213, 241, 228, 0.98), rgba(255, 241, 207, 0.98));
+}
+
+.overlay-h1 {
+  display: block;
+  margin-top: 28rpx;
+  font-size: 48rpx;
+  font-weight: 700;
+  color: rgba(32, 32, 32, 0.92);
+  line-height: 1.35;
+}
+
+.overlay-p {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 34rpx;
+  line-height: 44rpx;
+  color: rgba(105, 92, 86, 0.96);
+}
+
+.overlay-btn-gradient {
+  margin-top: 36rpx;
+  height: 104rpx;
+  line-height: 104rpx;
+  text-align: center;
+  border-radius: 999rpx;
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+  background: linear-gradient(90deg, rgba(255, 239, 201, 0.99), rgba(214, 241, 228, 0.99));
+  border: 2rpx solid rgba(176, 214, 198, 0.95);
+  box-shadow: 0 16rpx 32rpx rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
+}
+
+/* 资料门：一屏内头像 + 昵称 + 完成，接近微信表单 */
+.profile-gate-card {
+  left: 50%;
+  top: 50%;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  width: calc(100% - 96rpx);
+  max-width: 600rpx;
+  padding: 44rpx 40rpx 40rpx;
+}
+
+.profile-gate-title {
+  display: block;
+  text-align: center;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: rgba(32, 32, 32, 0.92);
+  line-height: 1.35;
+  margin-bottom: 36rpx;
+}
+
+.profile-native {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28rpx;
+  width: 100%;
+}
+
+.profile-gate-submit {
+  margin-top: 40rpx;
+  width: 100%;
+}
+
+/* 与微信 button 默认行高/最小高度对抗，否则会呈椭圆 */
+.profile-avatar-btn {
+  --avatar-size: 120rpx;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  min-width: var(--avatar-size);
+  min-height: var(--avatar-size);
+  max-width: var(--avatar-size);
+  max-height: var(--avatar-size);
+  line-height: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.85);
+  border: 2rpx solid rgba(176, 214, 198, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-avatar-btn::after {
+  border: none;
+}
+
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+}
+
+.profile-avatar-placeholder {
+  font-size: 22rpx;
+  color: var(--qy-link-strong);
+  padding: 0 12rpx;
+  text-align: center;
+  line-height: 1.25;
+}
+
+.profile-nick-input {
+  margin-top: 0;
+  width: 100%;
+  height: 96rpx;
+  line-height: 96rpx;
+  padding: 0 28rpx;
+  box-sizing: border-box;
+  border-radius: 24rpx;
+  border: 2rpx solid rgba(176, 214, 198, 0.95);
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 32rpx;
+  color: rgba(32, 32, 32, 0.92);
+}
+

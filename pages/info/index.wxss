@@ -1,0 +1,196 @@
+@import '../../styles/code-theme.wxss';
+
+page {
+  height: 100%;
+  min-height: 100vh;
+  background: var(--qy-page-tint);
+}
+
+.page {
+  position: relative;
+  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.stack {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+/* code: s(13) 居中 */
+.dimension-line {
+  text-align: center;
+  padding: 4rpx 32rpx 20rpx;
+  font-size: 26rpx;
+  line-height: 1.45;
+  color: rgba(0, 0, 0, 0.62);
+}
+
+.main-scroll {
+  flex: 1;
+  min-height: 0;
+  height: 0;
+  padding: 0 40rpx;
+  box-sizing: border-box;
+}
+
+/* 随内容增高；勿设过大 min-height，否则短内容也会出现大段空白且可滚 */
+.info-card {
+  position: relative;
+  padding: 36rpx 36rpx 40rpx;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.78);
+  border-radius: 52rpx;
+  border: 2rpx solid var(--qy-card-stroke);
+  box-shadow: 0 16rpx 16rpx rgba(0, 0, 0, 0.14);
+}
+
+.index-pill {
+  display: inline-block;
+  padding: 0 24rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  border-radius: 999rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+  background: var(--qy-mint);
+}
+
+/* code: type 在 cardX+s(18)，alias 在 cardX+s(150)，纵坐标略错开 */
+.type-row {
+  position: relative;
+  margin-top: 28rpx;
+  min-height: 96rpx;
+}
+
+.type-code {
+  display: block;
+  font-size: 84rpx;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.82);
+  line-height: 1.05;
+}
+
+.type-alias {
+  position: absolute;
+  left: 264rpx;
+  top: 0;
+  font-size: 48rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+  line-height: 1.2;
+}
+
+.keyword-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-top: 20rpx;
+}
+
+.kw {
+  padding: 0 20rpx;
+  height: 56rpx;
+  line-height: 56rpx;
+  border-radius: 28rpx;
+  font-size: 30rpx;
+  color: var(--qy-link-strong);
+  background: var(--qy-lemon);
+}
+
+.section {
+  margin-top: 32rpx;
+}
+
+.section-title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.76);
+  line-height: 1.35;
+}
+
+.section-body {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 34rpx;
+  line-height: 50rpx;
+  color: rgba(0, 0, 0, 0.62);
+}
+
+/* 上一型 / 下一型：lemon + 描边，与 code nav 一致 */
+.type-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 32rpx;
+  padding: 0 0 8rpx;
+}
+
+.type-nav-btn {
+  width: 240rpx;
+  height: 92rpx;
+  line-height: 92rpx;
+  text-align: center;
+  border-radius: 999rpx;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+  background: var(--qy-lemon);
+  border: 2rpx solid var(--qy-card-stroke);
+  box-sizing: border-box;
+}
+
+.scroll-footer-spacer {
+  height: 24rpx;
+}
+
+.bottom-bar {
+  flex-shrink: 0;
+  padding: 16rpx 40rpx 24rpx;
+  box-sizing: border-box;
+}
+
+.safe-bottom {
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+
+.home-btn {
+  height: 116rpx;
+  line-height: 116rpx;
+  text-align: center;
+  border-radius: 999rpx;
+  font-size: 48rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+  background: var(--qy-lemon);
+  border: 2rpx solid var(--qy-card-stroke);
+  box-sizing: border-box;
+}

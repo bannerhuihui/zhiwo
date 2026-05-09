@@ -1,0 +1,55 @@
+<view class="page">
+  <image class="bg" src="/images/question.png" mode="aspectFill" />
+  <view class="mask"></view>
+
+  <view class="stack">
+    <navigation-bar title="邀请朋友来测" back="{{true}}" color="rgba(0,0,0,0.78)" background="transparent"></navigation-bar>
+
+    <view class="headlines">
+      <text class="headline-main">选择一条测试发给朋友</text>
+      <text class="headline-sub">好友完成后，你就能查看 TA 眼中的你</text>
+    </view>
+
+    <scroll-view scroll-y class="list-scroll" enhanced show-scrollbar="{{false}}">
+      <view class="qy-scroll-fill" style="min-height: {{scrollInnerMinPx}}px;">
+        <view class="qy-scroll-fill__grow"></view>
+        <view class="qy-scroll-fill__main">
+      <view wx:if="{{!rows.length}}" class="empty-hint">暂无自测记录，请先在首页完成自测</view>
+      <block wx:for="{{rows}}" wx:key="id">
+        <view class="inv-card">
+          <view class="inv-main">
+            <view class="inv-topline">
+              <text class="inv-type">{{item.typeCode}}</text>
+              <text class="inv-alias">{{item.alias}}</text>
+            </view>
+            <view class="inv-tags" wx:if="{{item.keywords.length}}">
+              <view class="inv-tag" wx:for="{{item.keywords}}" wx:for-item="kw" wx:key="*this">{{kw}}</view>
+            </view>
+            <text class="inv-time">{{item.timeText}}</text>
+          </view>
+          <view class="inv-actions">
+            <button
+              class="btn-capsule btn-share"
+              open-type="share"
+              hover-class="none"
+              data-record-id="{{item.id}}"
+              data-type-code="{{item.typeCode}}"
+            >
+              <text class="btn-label">发给朋友</text>
+            </button>
+            <view class="btn-capsule btn-info" data-type="{{item.typeCode}}" bindtap="onOpenInfo">
+              <text class="btn-label">看说明</text>
+            </view>
+          </view>
+        </view>
+      </block>
+      <view class="list-footer-spacer"></view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="bottom-bar safe-bottom">
+      <view class="btn-home" bindtap="onHome">回到首页</view>
+    </view>
+  </view>
+</view>

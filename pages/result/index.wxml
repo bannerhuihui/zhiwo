@@ -1,0 +1,63 @@
+<view class="result-root">
+  <view class="page">
+    <image class="bg" src="/images/question.png" mode="aspectFill" aria-hidden="true" />
+    <view class="mask"></view>
+
+    <view class="stack">
+      <navigation-bar title="{{pageTitle}}" back="{{true}}" color="rgba(0,0,0,0.72)" background="transparent"></navigation-bar>
+
+      <scroll-view scroll-y class="main-scroll" enhanced show-scrollbar="{{false}}">
+        <view class="qy-scroll-fill" style="min-height: {{scrollInnerMinPx}}px;">
+          <view class="qy-scroll-fill__grow"></view>
+          <view class="qy-scroll-fill__main">
+        <view class="result-card">
+          <view class="type-row">
+            <text class="type-code">{{type}}</text>
+            <text class="type-alias">{{alias}}</text>
+          </view>
+
+          <view class="kw-title">关键词</view>
+          <view class="keyword-row" wx:if="{{keywords.length}}">
+            <view class="kw" wx:for="{{keywords}}" wx:for-item="kw" wx:key="*this">{{kw}}</view>
+          </view>
+          <view class="kw-empty" wx:else>暂无关键词</view>
+
+          <view class="dim-block" wx:if="{{showDimension}}">
+            <view class="dim-heading">维度倾向</view>
+            <view class="dim-row" wx:for="{{dimRows}}" wx:key="leftLabel">
+              <view class="dim-bar">
+                <view class="dim-grad" style="background: {{item.grad}}"></view>
+                <view class="dim-split" style="left: {{item.splitPercent}}%;"></view>
+                <view class="dim-captions">
+                  <text class="dim-cap dim-cap--left">{{item.leftCaption}}</text>
+                  <text class="dim-cap dim-cap--right">{{item.rightCaption}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <view class="section">
+            <text class="section-title">类型简介</text>
+            <text class="section-body">{{summary}}</text>
+          </view>
+          <view class="section">
+            <text class="section-title">性格优势</text>
+            <text class="section-body">{{strengths}}</text>
+          </view>
+          <view class="section">
+            <text class="section-title">适合方向</text>
+            <text class="section-body">{{fit}}</text>
+          </view>
+        </view>
+            <view class="result-scroll-tail"></view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="actions actions--fixed">
+        <view wx:if="{{mode === 'self'}}" class="btn lemon" bindtap="onInvite" hover-class="none">邀请朋友来测</view>
+        <view class="btn lemon" bindtap="onHome" hover-class="none">{{mode === 'mutual' ? '回到首页' : '返回首页'}}</view>
+      </view>
+    </view>
+  </view>
+</view>
