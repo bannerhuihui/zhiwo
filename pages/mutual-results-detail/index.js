@@ -1,4 +1,5 @@
 const api = require('../../utils/api')
+const { publicAvatarUrl } = require('../../utils/avatar-url')
 const { scrollInnerMinHeightPx } = require('../../utils/scroll-layout')
 const { syncRecordMutualCounts } = require('../../utils/record-sync')
 const { getRecordMbtiType } = require('../../utils/mutual-aggregate')
@@ -38,14 +39,26 @@ function formatTime(createdAt) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 
+function pickFriendField(raw, camel, snake) {
+  if (!raw || typeof raw !== 'object') return ''
+  const a = raw[camel]
+  if (a != null && String(a).trim()) return String(a).trim()
+  const b = raw[snake]
+  if (b != null && String(b).trim()) return String(b).trim()
+  return ''
+}
+
 function normalizeMutualItem(raw, index, selfType) {
   const id = raw.id || raw._id || `idx-${index}`
   const friendType = getRecordMbtiType(raw) || '--'
   const same = !!selfType && selfType.length === 4 && friendType === selfType
+  const nick = pickFriendField(raw, 'friendNickName', 'friend_nick_name')
+  const avatar = publicAvatarUrl(pickFriendField(raw, 'friendAvatarUrl', 'friend_avatar_url'))
   return {
     id: String(id),
-    friendNickName: truncateName(raw.friendNickName || `朋友${index + 1}`),
-    friendAvatarUrl: raw.friendAvatarUrl || '',
+    friendNickName: truncateName(nick || `朋友${index + 1}`),
+    friendAvatarUrl: avatar,
+    friendAvatarLoadFailed: false,
     friendType,
     timeText: formatTime(raw.createdAt),
     chipText: same ? '结果一致' : '结果不同',
@@ -214,6 +227,15 @@ Page({
     }
     const rows = arr.map((item, i) => normalizeMutualItem(item, i, selfTypeForChip))
     this.setData({ loading: false, rows }, () => this._refreshScrollFill())
+  },
+
+  onFriendAvatarError(e) {
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    const rows = this.data.rows.map((r) =>
+      r.id === id ? { ...r, friendAvatarLoadFailed: true } : r,
+    )
+    this.setData({ rows })
   },
 
   onOpenCompare(e) {

@@ -1,4 +1,5 @@
 const api = require('../../utils/api')
+const { prepareAvatarLocalPath } = require('../../utils/avatar-local-path')
 const { getAppId, getApiSource, refreshProfile } = require('../../utils/session')
 const { isPlaceholderNickname, hasUsableWechatProfile } = require('../../utils/profile-guard')
 const { SHARE_CARD_IMAGE_URL } = require('../../utils/share-assets')
@@ -9,6 +10,8 @@ Page({
     showLoading: false,
     showAuthFail: false,
     showProfileGate: false,
+    /** 当前这次弹窗是为哪次跳转准备的（仅首页按钮触发时写入） */
+    pendingUrlAfterProfile: '',
     recordsEmpty: true,
     authFailLines: [],
     profileNickDraft: '',
@@ -47,8 +50,19 @@ Page({
     const showLoading = authStatus === 'loading'
     const showAuthFail = authStatus === 'fail'
     const hasUsableProfile = hasUsableWechatProfile(profile)
-    const showProfileGate = authStatus === 'success' && !hasUsableProfile
-    const showMain = authStatus === 'success' && hasUsableProfile && !showLoading
+    // 登录成功即可浏览首页；头像昵称在用户点击功能时再要（showProfileGate 由交互触发）
+    let gateRequested = this.data.showProfileGate
+    if (gd.profileGatePending) {
+      if (authStatus === 'success') {
+        gd.profileGatePending = false
+        gateRequested = true
+      } else if (authStatus === 'fail') {
+        gd.profileGatePending = false
+        gd.pendingNavigateAfterProfile = null
+      }
+    }
+    const showProfileGate = hasUsableProfile ? false : gateRequested
+    const showMain = authStatus === 'success' && !showLoading
 
     this.setData({
       recordsEmpty,
@@ -60,8 +74,27 @@ Page({
     })
   },
 
+  /**
+   * 需要对外身份前先完善头像昵称；通过后执行 jump
+   * @param {string} pendingUrl navigateTo 的 url
+   * @param {() => void} jump
+   */
+  _ensureProfileThen(pendingUrl, jump) {
+    const app = getApp()
+    if (hasUsableWechatProfile(app.globalData.profile)) {
+      jump()
+      return
+    }
+    this.setData({
+      showProfileGate: true,
+      pendingUrlAfterProfile: pendingUrl || '',
+    })
+  },
+
   startSelf() {
-    wx.navigateTo({ url: '/pages/quiz/index?mode=self' })
+    this._ensureProfileThen('/pages/quiz/index?mode=self', () => {
+      wx.navigateTo({ url: '/pages/quiz/index?mode=self' })
+    })
   },
 
   startMutual() {
@@ -69,15 +102,21 @@ Page({
       wx.showToast({ title: '请先完成自测', icon: 'none' })
       return
     }
-    wx.navigateTo({ url: '/pages/invite/index' })
+    this._ensureProfileThen('/pages/invite/index', () => {
+      wx.navigateTo({ url: '/pages/invite/index' })
+    })
   },
 
   openRecords() {
-    wx.navigateTo({ url: '/pages/records/index' })
+    this._ensureProfileThen('/pages/records/index', () => {
+      wx.navigateTo({ url: '/pages/records/index' })
+    })
   },
 
   openInfo() {
-    wx.navigateTo({ url: '/pages/info/index' })
+    this._ensureProfileThen('/pages/info/index', () => {
+      wx.navigateTo({ url: '/pages/info/index' })
+    })
   },
 
   openSettings() {
@@ -128,21 +167,37 @@ Page({
 
   _persistProfile(app, profile) {
     wx.showLoading({ title: '保存资料…', mask: true })
-    api
-      .saveProfile({
-        userId: app.globalData.userId,
-        nickName: profile.nickName,
-        avatarUrl: profile.avatarUrl,
-        skipped: false,
-        appId: getAppId(),
-        source: getApiSource(),
-      })
+    const userId = app.globalData.userId
+    prepareAvatarLocalPath(profile.avatarUrl)
+      .then((localPath) => api.uploadUserAvatar(localPath, userId))
+      .then((avatarStoredUrl) =>
+        api.saveProfile({
+          userId,
+          nickName: profile.nickName,
+          avatarUrl: avatarStoredUrl,
+          skipped: false,
+          appId: getAppId(),
+          source: getApiSource(),
+        }),
+      )
       .then(() => refreshProfile(app))
       .then(() => {
+        const urlFromPage = this.data.pendingUrlAfterProfile || ''
+        const globalPending = app.globalData.pendingNavigateAfterProfile
+        const urlFromGlobal = globalPending && globalPending.url ? globalPending.url : ''
+        const targetUrl = urlFromPage || urlFromGlobal
         wx.hideLoading()
-        this.setData({ profileNickDraft: '', profileAvatarDraft: '' })
+        this.setData({
+          profileNickDraft: '',
+          profileAvatarDraft: '',
+          pendingUrlAfterProfile: '',
+        })
+        app.globalData.pendingNavigateAfterProfile = null
         this.syncState()
         wx.showToast({ title: '已保存', icon: 'success' })
+        if (targetUrl) {
+          wx.navigateTo({ url: targetUrl })
+        }
       })
       .catch((e) => {
         wx.hideLoading()

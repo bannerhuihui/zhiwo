@@ -102,11 +102,50 @@ function wipeUserTestData(data) {
   return request('POST', '/storage/user-data/wipe', data)
 }
 
+/** 头像二进制上传至服务端 TOS，返回 HTTPS 永久 url */
+function uploadUserAvatar(localFilePath, userId) {
+  return new Promise((resolve, reject) => {
+    if (!config.apiBaseUrl) return reject(new Error('apiBaseUrl 未配置'))
+    if (!localFilePath) return reject(new Error('缺少头像文件路径'))
+    wx.uploadFile({
+      url: `${config.apiBaseUrl}/storage/upload/image`,
+      filePath: localFilePath,
+      name: 'file',
+      formData: {
+        userId: String(userId || ''),
+      },
+      timeout: REQUEST_TIMEOUT_MS,
+      success: (res) => {
+        if (res.statusCode < 200 || res.statusCode >= 300) {
+          reject(new Error(`HTTP ${res.statusCode}`))
+          return
+        }
+        const body = parseResponseData(res.data)
+        const code = body.code != null ? Number(body.code) : NaN
+        if (code !== 2000) {
+          reject(new Error((body.message && String(body.message)) || '图片上传失败'))
+          return
+        }
+        const url = body.data && body.data.url
+        if (!url) {
+          reject(new Error('上传成功但未返回地址'))
+          return
+        }
+        resolve(String(url).trim())
+      },
+      fail: (err) => {
+        reject(new Error((err && err.errMsg) || '图片上传失败'))
+      },
+    })
+  })
+}
+
 module.exports = {
   request,
   login,
   saveProfile,
   getProfile,
+  uploadUserAvatar,
   saveRecord,
   listRecords,
   syncRecords,

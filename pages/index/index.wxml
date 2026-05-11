@@ -59,7 +59,7 @@
     </view>
   </view>
 
-  <!-- 首次进入：微信原生能力 chooseAvatar + nickname，写库后进主页 -->
+  <!-- 按需完善：chooseAvatar + nickname，保存后跳转用户原定页面 -->
   <view class="ui-overlay" wx:if="{{showProfileGate}}">
     <view class="gear-wrap" bindtap="openSettings">
       <view class="gear-circle gear-circle--light">

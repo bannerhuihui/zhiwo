@@ -29,7 +29,14 @@
         <view class="qy-scroll-fill__grow"></view>
         <view class="qy-scroll-fill__main">
       <view class="card" wx:for="{{rows}}" wx:key="id">
-        <image wx:if="{{item.friendAvatarUrl}}" class="avatar" src="{{item.friendAvatarUrl}}" mode="aspectFill" />
+        <image
+          wx:if="{{item.friendAvatarUrl && !item.friendAvatarLoadFailed}}"
+          class="avatar"
+          src="{{item.friendAvatarUrl}}"
+          mode="aspectFill"
+          data-id="{{item.id}}"
+          binderror="onFriendAvatarError"
+        />
         <view wx:else class="avatar avatar--ph"></view>
 
         <view class="card-mid">

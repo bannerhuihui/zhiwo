@@ -1,5 +1,6 @@
 const app = getApp()
 const api = require('../../utils/api')
+const { publicAvatarUrl } = require('../../utils/avatar-url')
 const { buildMbtiType } = require('../../utils/mbti')
 const { getAppId, getApiSource } = require('../../utils/session')
 const selfQuestions = require('../../data/self-test-questions.js')
@@ -154,7 +155,7 @@ Page({
               inviteId: inv.inviteId,
               friendUserId: userId,
               friendNickName: p.nickName || '',
-              friendAvatarUrl: p.avatarUrl || '',
+              friendAvatarUrl: publicAvatarUrl(p.avatarUrl || ''),
               answers: this.answers.slice(),
               result,
               createdAt: Date.now(),

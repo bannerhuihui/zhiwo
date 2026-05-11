@@ -12,6 +12,12 @@ navigator {
   font-family: "QingningRounded";
 }
 
+/* Skyline：scroll-view 内文字不继承 page 字体时，显式指定并带系统后备，避免出现空白字 */
+scroll-view {
+  font-family: "QingningRounded", -apple-system, BlinkMacSystemFont, "PingFang SC",
+    "Helvetica Neue", Arial, sans-serif;
+}
+
 /* UI 静态壳通用布局（占位页与后续高保真页可复用） */
 .shell-root {
   min-height: 100vh;

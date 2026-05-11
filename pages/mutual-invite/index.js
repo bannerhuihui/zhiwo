@@ -1,4 +1,5 @@
 const api = require('../../utils/api')
+const { hasUsableWechatProfile } = require('../../utils/profile-guard')
 
 /** 调试：为 true 时允许本人打开自己的互测邀请（正式环境须为 false） */
 const DEBUG_ALLOW_SELF_MUTUAL = false
@@ -77,6 +78,13 @@ Page({
     const inv = app.globalData.invite
     if (!inv || !inv.inviteId) {
       wx.showToast({ title: '请通过邀请链接进入', icon: 'none' })
+      return
+    }
+    if (!hasUsableWechatProfile(app.globalData.profile)) {
+      const url = `/pages/quiz/index?mode=mutual&inviteId=${encodeURIComponent(inv.inviteId)}`
+      app.globalData.pendingNavigateAfterProfile = { url }
+      app.globalData.profileGatePending = true
+      wx.reLaunch({ url: '/pages/index/index' })
       return
     }
     wx.navigateTo({
