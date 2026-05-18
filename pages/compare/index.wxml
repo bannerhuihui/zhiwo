@@ -11,13 +11,23 @@
         <view class="qy-scroll-fill__main">
       <view class="card card-types">
         <view class="types-row">
-          <view class="types-col">
+          <view
+            class="types-col types-col--tap"
+            hover-class="types-col--tap-hover"
+            bindtap="onOpenSelfType"
+          >
             <text class="types-label">你的自测</text>
             <text class="types-code">{{selfType}}</text>
+            <text class="types-alias">{{selfAlias}}</text>
           </view>
-          <view class="types-col types-col--right">
+          <view
+            class="types-col types-col--right types-col--tap"
+            hover-class="types-col--tap-hover"
+            bindtap="onOpenMutualType"
+          >
             <text class="types-label">{{friendName}}眼中的你</text>
             <text class="types-code">{{mutualType}}</text>
+            <text class="types-alias">{{mutualAlias}}</text>
           </view>
         </view>
       </view>

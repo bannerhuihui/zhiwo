@@ -1,5 +1,8 @@
 const mbtiTypes = require('../../data/mbti-types')
+const { hasUsableWechatProfile } = require('../../utils/profile-guard')
 const { scrollInnerMinHeightPx } = require('../../utils/scroll-layout')
+const { loadRemoteRecords } = require('../../utils/session')
+const { MIN_MUTUAL_EVALUATIONS_FOR_VIEW } = require('../../utils/mutual-view-gate')
 
 function getTypeMeta(type) {
   if (!type) return null
@@ -9,7 +12,6 @@ function getTypeMeta(type) {
   return null
 }
 
-const MIN_MUTUAL_EVALUATIONS_FOR_VIEW = 10
 const MUTUAL_TOO_FEW_MSG =
   '对您进行的评价，不到10份，无法查看此结果。请继续邀请朋友，对您进行评价。'
 
@@ -73,14 +75,48 @@ Page({
 
   _refreshScrollFill() {
     const px = scrollInnerMinHeightPx({
-      bottomRpx: 16 + 104 + 24 + 104 + 24,
+      bottomRpx: 16 + 104 + 24 + 104 + 24 + 104 + 24,
       aboveScrollRpx: 8 + 20 + 48,
     })
     if (px !== this.data.scrollInnerMinPx) this.setData({ scrollInnerMinPx: px })
   },
 
+  /** 与 session.loadRemoteRecords 一致；并发时复用同一次请求。 */
+  _syncRecordsFromServer() {
+    const app = getApp()
+    const userId = app.globalData && app.globalData.userId
+    if (!userId) return Promise.resolve()
+    if (this._recordsRefreshPromise) return this._recordsRefreshPromise
+    this._recordsRefreshPromise = loadRemoteRecords(app, userId, { keepOnError: true }).finally(() => {
+      this._recordsRefreshPromise = null
+    })
+    return this._recordsRefreshPromise
+  },
+
   onShow() {
+    const app = getApp()
+    const gd = app.globalData || {}
+    if (gd.authStatus !== 'success') {
+      wx.redirectTo({ url: '/pages/records-auth-hint/index?step=login' })
+      return
+    }
+    if (!hasUsableWechatProfile(gd.profile)) {
+      wx.redirectTo({ url: '/pages/records-auth-hint/index?step=profile' })
+      return
+    }
     this.loadRecords()
+    this._syncRecordsFromServer().then(() => this.loadRecords())
+  },
+
+  onPullDownRefresh() {
+    const app = getApp()
+    if (!app.globalData.userId || app.globalData.authStatus !== 'success') {
+      wx.stopPullDownRefresh()
+      return
+    }
+    this._syncRecordsFromServer()
+      .then(() => this.loadRecords())
+      .finally(() => wx.stopPullDownRefresh())
   },
 
   loadRecords() {
@@ -93,6 +129,10 @@ Page({
       mutualAllBtnLabel: `${total}位朋友们眼中的你`,
     })
     this._rawRecords = raw
+  },
+
+  onOpenMutualGiven() {
+    wx.navigateTo({ url: '/pages/mutual-given-list/index' })
   },
 
   onOpenMutual(e) {

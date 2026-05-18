@@ -48,7 +48,8 @@ function loadRemoteProfile(app, userId) {
     })
 }
 
-function loadRemoteRecords(app, userId) {
+function loadRemoteRecords(app, userId, opts) {
+  const keepOnError = opts && opts.keepOnError
   if (!userId) return Promise.resolve([])
   return api
     .listRecords(userId)
@@ -66,7 +67,9 @@ function loadRemoteRecords(app, userId) {
       return Promise.all(promises).then(() => normalized)
     })
     .catch(() => {
-      app.globalData.records = []
+      if (!keepOnError) {
+        app.globalData.records = []
+      }
       return []
     })
 }

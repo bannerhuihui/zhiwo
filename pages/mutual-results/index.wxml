@@ -62,26 +62,39 @@
           </view>
         </view>
 
-        <view class="dim-cap">维度倾向</view>
-        <view class="dim-row" wx:for="{{dimRows}}" wx:key="leftLabel">
-          <view class="dim-bar" style="background: {{item.grad}};">
-            <view class="dim-split-wrap" style="left: {{item.leftPercent}}%;">
-              <view class="dim-split-mark" aria-hidden="true">
-                <view wx:if="{{item.splitHeavy === 'left'}}" class="dim-split-tee dim-split-tee--left">
-                  <view class="dim-split-arrowhead dim-split-arrowhead--left"></view>
-                  <view class="dim-split-h"></view>
-                </view>
-                <view class="dim-split-v"></view>
-                <view wx:if="{{item.splitHeavy === 'right'}}" class="dim-split-tee dim-split-tee--right">
-                  <view class="dim-split-h"></view>
-                  <view class="dim-split-arrowhead dim-split-arrowhead--right"></view>
+        <view class="dim-section">
+          <view class="dim-cap">维度倾向</view>
+          <view class="dim-row" wx:for="{{dimRows}}" wx:key="leftLabel">
+            <view class="dim-bar" style="background: {{item.grad}};">
+              <view class="dim-split-wrap" style="left: {{item.leftPercent}}%;">
+                <view class="dim-split-mark" aria-hidden="true">
+                  <view wx:if="{{item.splitHeavy === 'left'}}" class="dim-split-tee dim-split-tee--left">
+                    <view class="dim-split-arrowhead dim-split-arrowhead--left"></view>
+                    <view class="dim-split-h"></view>
+                  </view>
+                  <view class="dim-split-v"></view>
+                  <view wx:if="{{item.splitHeavy === 'right'}}" class="dim-split-tee dim-split-tee--right">
+                    <view class="dim-split-h"></view>
+                    <view class="dim-split-arrowhead dim-split-arrowhead--right"></view>
+                  </view>
                 </view>
               </view>
             </view>
+            <view class="dim-labels">
+              <text class="dim-l">{{item.leftLabel}} {{item.leftPercent}}%</text>
+              <text class="dim-r">{{item.rightPercent}}% {{item.rightLabel}}</text>
+            </view>
           </view>
-          <view class="dim-labels">
-            <text class="dim-l">{{item.leftLabel}} {{item.leftPercent}}%</text>
-            <text class="dim-r">{{item.rightPercent}}% {{item.rightLabel}}</text>
+          <view
+            wx:if="{{dimSectionMaskVisible}}"
+            class="dim-section-mask"
+            catchtouchmove="onDimMaskTouchMove"
+          >
+            <view class="dim-section-mask-hint">
+              <text class="dim-section-mask-title">维度对比待解锁</text>
+              <text class="dim-section-mask-desc">需累计满 {{dimUnlockNeed}} 条好友互测，开放后即可查看下方四维度倾向。</text>
+              <text class="dim-section-mask-only">当前 {{totalFriends}}/{{dimUnlockNeed}} 条</text>
+            </view>
           </view>
         </view>
       </view>

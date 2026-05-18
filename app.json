@@ -4,6 +4,8 @@
     "pages/quiz/index",
     "pages/result/index",
     "pages/records/index",
+    "pages/mutual-given-list/index",
+    "pages/records-auth-hint/index",
     "pages/info/index",
     "pages/invite/index",
     "pages/mutual-invite/index",

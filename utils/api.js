@@ -97,6 +97,11 @@ function getMutualResults(selfTestId) {
   return request('GET', `/storage/mutual-results/${encodeURIComponent(selfTestId)}`)
 }
 
+/** 当前用户作为好友完成过的互测列表（friendUserId 为登录用户本人） */
+function listMutualGiven(friendUserId) {
+  return request('GET', `/storage/mutual-given/${encodeURIComponent(friendUserId)}`)
+}
+
 /** 清除当前用户在服务端的自测、互测记录及本人发起的邀请（不删头像昵称等资料） */
 function wipeUserTestData(data) {
   return request('POST', '/storage/user-data/wipe', data)
@@ -154,5 +159,6 @@ module.exports = {
   listInvites,
   completeInvite,
   getMutualResults,
+  listMutualGiven,
   wipeUserTestData,
 }

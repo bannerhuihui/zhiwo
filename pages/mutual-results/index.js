@@ -8,8 +8,8 @@ const {
   buildDimRows,
 } = require('../../utils/mutual-aggregate')
 const mbtiTypes = require('../../data/mbti-types')
+const { MIN_MUTUAL_EVALUATIONS_FOR_VIEW, MIN_FRIEND_MUTUAL_FOR_DIM } = require('../../utils/mutual-view-gate')
 
-const MIN_MUTUAL_EVALUATIONS_FOR_VIEW = 10
 const MUTUAL_TOO_FEW_MSG =
   '对您进行的评价，不到10份，无法查看此结果。请继续邀请朋友，对您进行评价。'
 
@@ -119,6 +119,12 @@ Page({
     dimRows: [],
     totalFriends: 0,
     primaryBtnText: '返回记录',
+    /** 累计互测条数 &lt; MIN_FRIEND_MUTUAL_FOR_DIM 时显示遮罩；否则不显示（维度倾向全展示） */
+    dimSectionMaskVisible: true,
+    /** 与 MIN_FRIEND_MUTUAL_FOR_DIM 一致，用于文案展示 */
+    dimUnlockNeed: 5,
+    /** 距离解锁还差几条 */
+    dimShortForUnlock: 5,
   },
 
   onReady() {
@@ -182,12 +188,20 @@ Page({
       app.globalData._mutualAllList = merged
       const summary = buildSummaryFields(merged)
       const primaryBtnText = merged.length ? '查看详情' : '返回记录'
+      const need = MIN_FRIEND_MUTUAL_FOR_DIM
+      const n = merged.length
+      // 规则：累计好友互测条数 n < need → 遮罩 + 文案；n ≥ need → 不遮罩，维度倾向完整展示
+      const dimSectionMaskVisible = n < need
+      const dimShortForUnlock = Math.max(0, need - n)
       this.setData(
         {
           loading: false,
           showContent: true,
           primaryBtnText,
           ...summary,
+          dimSectionMaskVisible,
+          dimShortForUnlock,
+          dimUnlockNeed: need,
         },
         () => this._refreshScrollMin(),
       )
@@ -274,4 +288,15 @@ Page({
   onHome() {
     wx.reLaunch({ url: '/pages/index/index' })
   },
+
+  /**
+   * 手动设置遮罩（调试或特殊业务）；正常由 loadAllMutual 按累计条数自动计算。
+   * @param {boolean} visible true 显示遮罩，false 移除遮罩
+   */
+  setDimSectionMaskVisible(visible) {
+    this.setData({ dimSectionMaskVisible: !!visible })
+  },
+
+  /** 遮罩层吸收滑动，减少穿透到 scroll-view */
+  onDimMaskTouchMove() {},
 })

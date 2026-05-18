@@ -1,7 +1,10 @@
 const api = require('../../utils/api')
 const { prepareAvatarLocalPath } = require('../../utils/avatar-local-path')
 const { getAppId, getApiSource, refreshProfile } = require('../../utils/session')
-const { isPlaceholderNickname, hasUsableWechatProfile } = require('../../utils/profile-guard')
+const {
+  isPlaceholderNickname,
+  hasUsableWechatProfile,
+} = require('../../utils/profile-guard')
 const { SHARE_CARD_IMAGE_URL } = require('../../utils/share-assets')
 
 Page({
@@ -92,9 +95,7 @@ Page({
   },
 
   startSelf() {
-    this._ensureProfileThen('/pages/quiz/index?mode=self', () => {
-      wx.navigateTo({ url: '/pages/quiz/index?mode=self' })
-    })
+    wx.navigateTo({ url: '/pages/quiz/index?mode=self' })
   },
 
   startMutual() {
@@ -102,21 +103,25 @@ Page({
       wx.showToast({ title: '请先完成自测', icon: 'none' })
       return
     }
-    this._ensureProfileThen('/pages/invite/index', () => {
-      wx.navigateTo({ url: '/pages/invite/index' })
-    })
+    wx.navigateTo({ url: '/pages/invite/index' })
   },
 
   openRecords() {
-    this._ensureProfileThen('/pages/records/index', () => {
-      wx.navigateTo({ url: '/pages/records/index' })
-    })
+    const app = getApp()
+    const gd = app.globalData || {}
+    if (gd.authStatus !== 'success') {
+      wx.navigateTo({ url: '/pages/records-auth-hint/index?step=login' })
+      return
+    }
+    if (!hasUsableWechatProfile(gd.profile)) {
+      wx.navigateTo({ url: '/pages/records-auth-hint/index?step=profile' })
+      return
+    }
+    wx.navigateTo({ url: '/pages/records/index' })
   },
 
   openInfo() {
-    this._ensureProfileThen('/pages/info/index', () => {
-      wx.navigateTo({ url: '/pages/info/index' })
-    })
+    wx.navigateTo({ url: '/pages/info/index' })
   },
 
   openSettings() {

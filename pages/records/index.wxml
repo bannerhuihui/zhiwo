@@ -41,6 +41,7 @@
 
     <view class="bottom-actions safe-bottom">
       <view class="action-lemon" bindtap="onMutualAll">{{mutualAllBtnLabel}}</view>
+      <view class="action-lemon" bindtap="onOpenMutualGiven">我给好友的互测</view>
       <view class="action-lemon" bindtap="onHome">回到首页</view>
     </view>
   </view>

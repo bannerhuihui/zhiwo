@@ -3,8 +3,8 @@ const { publicAvatarUrl } = require('../../utils/avatar-url')
 const { scrollInnerMinHeightPx } = require('../../utils/scroll-layout')
 const { syncRecordMutualCounts } = require('../../utils/record-sync')
 const { getRecordMbtiType } = require('../../utils/mutual-aggregate')
+const { MIN_MUTUAL_EVALUATIONS_FOR_VIEW } = require('../../utils/mutual-view-gate')
 
-const MIN_MUTUAL_EVALUATIONS_FOR_VIEW = 10
 const MUTUAL_TOO_FEW_MSG =
   '对您进行的评价，不到10份，无法查看此结果。请继续邀请朋友，对您进行评价。'
 

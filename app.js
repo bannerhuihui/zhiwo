@@ -25,6 +25,8 @@ App({
     profileGatePending: false,
     /** 资料保存成功后 navigateTo 的目标，例如邀请进端未完成头像昵称时 */
     pendingNavigateAfterProfile: null,
+    /** 答完题后待入库：登录并完善头像昵称后由 utils/persist-quiz 写入 */
+    pendingQuizPersist: null,
     /** 答题用题库（与页面 require 双保险） */
     selfTestQuestions: Array.isArray(SELF_TEST_QUESTIONS) ? SELF_TEST_QUESTIONS : [],
     mutualTestQuestions: Array.isArray(MUTUAL_TEST_QUESTIONS) ? MUTUAL_TEST_QUESTIONS : [],

@@ -1,7 +1,5 @@
 {
   "navigationStyle": "custom",
-  "enablePullDownRefresh": true,
-  "backgroundTextStyle": "dark",
   "usingComponents": {
     "navigation-bar": "/components/navigation-bar/navigation-bar"
   }

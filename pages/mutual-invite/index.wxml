@@ -9,7 +9,7 @@
       </view>
 
       <view class="actions">
-        <view class="btn-lemon" bindtap="onStartMutual">开始互测</view>
+        <view class="btn-lemon" bindtap="onStartMutual">为{{ownerShort}}进行测试</view>
         <view class="btn-lemon btn-second" bindtap="onGoHome">进入主页</view>
       </view>
 

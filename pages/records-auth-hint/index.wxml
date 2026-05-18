@@ -1,0 +1,66 @@
+<view class="page">
+  <image class="bg" src="/images/question.png" mode="aspectFill" />
+  <view class="mask"></view>
+
+  <view class="stack">
+    <navigation-bar title="{{navTitle}}" back="{{true}}" color="rgba(0,0,0,0.72)" background="transparent"></navigation-bar>
+
+    <view class="subtitle">{{subtitle}}</view>
+
+    <scroll-view scroll-y class="main-scroll" enhanced show-scrollbar="{{false}}">
+      <view class="hint-card">
+        <view class="hint-pill">{{pillText}}</view>
+        <text class="hint-headline">{{headline}}</text>
+        <block wx:for="{{bodyLines}}" wx:for-index="idx" wx:for-item="line" wx:key="idx">
+          <text class="hint-body">{{line}}</text>
+        </block>
+
+        <view wx:if="{{step === 'profile'}}" class="profile-inline">
+          <text class="profile-inline-title">选择头像 · 昵称</text>
+          <view class="profile-native">
+            <button class="profile-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+              <image
+                wx:if="{{profileAvatarDraft}}"
+                class="profile-avatar-img"
+                src="{{profileAvatarDraft}}"
+                mode="aspectFill"
+              />
+              <text wx:else class="profile-avatar-placeholder">选择头像</text>
+            </button>
+            <input
+              class="profile-nick-input"
+              type="nickname"
+              placeholder="点击填写昵称"
+              value="{{profileNickDraft}}"
+              bindinput="onNicknameInput"
+            />
+          </view>
+          <view class="profile-save-row {{savingProfile ? 'is-disabled' : ''}}" bindtap="onSaveProfileForm">
+            {{savingProfile ? '保存中…' : profileSaveLabel}}
+          </view>
+        </view>
+
+        <view wx:if="{{authTip}}" class="hint-err-bar">
+          <text class="hint-err-label">登录提示</text>
+          <text class="hint-err-text">{{authTip}}</text>
+        </view>
+
+        <text class="hint-footnote">
+          本说明面向「读取个人测试记录」；测试结果仅供娱乐交流，不具有任何指向性及指导性。
+        </text>
+      </view>
+      <view class="scroll-footer-spacer"></view>
+    </scroll-view>
+
+    <view wx:if="{{step === 'login'}}" class="bottom-actions safe-bottom">
+      <view class="btn-login {{logging ? 'is-disabled' : ''}}" bindtap="onAuthorize">
+        {{logging ? '正在登录…' : loginBtnLabel}}
+      </view>
+      <view class="btn-home-lemon" bindtap="onHome">返回首页</view>
+    </view>
+
+    <view wx:if="{{step === 'profile'}}" class="bottom-actions safe-bottom">
+      <view class="btn-home-lemon" bindtap="onHome">返回首页</view>
+    </view>
+  </view>
+</view>

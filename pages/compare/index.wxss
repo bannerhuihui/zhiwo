@@ -71,6 +71,16 @@ page {
   border-left: 2rpx solid rgba(0, 0, 0, 0.06);
 }
 
+.types-col--tap {
+  padding: 12rpx 16rpx 16rpx;
+  border-radius: 32rpx;
+  box-sizing: border-box;
+}
+
+.types-col--tap-hover {
+  background: rgba(213, 241, 228, 0.45);
+}
+
 .types-label {
   display: block;
   font-size: 40rpx;
@@ -82,10 +92,20 @@ page {
 .types-code {
   display: block;
   margin-top: 16rpx;
-  font-size: 84rpx;
+  font-size: 72rpx;
   font-weight: 700;
-  color: rgba(30, 30, 30, 0.9);
+  color: rgba(30, 30, 30, 0.88);
   line-height: 1.1;
+  letter-spacing: 2rpx;
+}
+
+.types-alias {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 36rpx;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--qy-link-strong);
 }
 
 .card-score {

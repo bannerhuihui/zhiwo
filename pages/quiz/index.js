@@ -1,8 +1,7 @@
 const app = getApp()
-const api = require('../../utils/api')
-const { publicAvatarUrl } = require('../../utils/avatar-url')
 const { buildMbtiType } = require('../../utils/mbti')
-const { getAppId, getApiSource } = require('../../utils/session')
+const { hasUsableWechatProfile } = require('../../utils/profile-guard')
+const { flushPendingQuizSubmit } = require('../../utils/persist-quiz')
 const selfQuestions = require('../../data/self-test-questions.js')
 /* 必须顶层 require：lazyCodeLoading 下函数内动态 require 可能未进包，互测会题库为空白屏 */
 const mutualQuestions = require('../../data/mutual-test-questions.js')
@@ -121,55 +120,33 @@ Page({
         inviteId: this.inviteId || '',
       }
 
-      const userId = app.globalData.userId
-      if (this.data.mode === 'self' && userId) {
-        const rec = {
-          id: `${Date.now()}_${Math.floor(Math.random() * 1e6)}`,
-          mode: 'self',
-          createdAt: Date.now(),
-          answers: this.answers.slice(),
-          result,
-          mutualCount: 0,
-          todayMutualCount: 0,
-        }
-        const prev = Array.isArray(app.globalData.records) ? app.globalData.records : []
-        app.globalData.records = [rec, ...prev]
-        api
-          .saveRecord({
-            userId,
-            mode: 'self',
-            answers: rec.answers,
-            result: rec.result,
-            createdAt: rec.createdAt,
-            selfTestId: rec.id,
-            appId: getAppId(),
-            source: getApiSource(),
-          })
-          .catch(() => {})
-      } else if (this.data.mode === 'mutual' && userId) {
-        const inv = app.globalData.invite || {}
-        if (inv.inviteId) {
-          const p = app.globalData.profile || {}
-          api
-            .completeInvite({
-              inviteId: inv.inviteId,
-              friendUserId: userId,
-              friendNickName: p.nickName || '',
-              friendAvatarUrl: publicAvatarUrl(p.avatarUrl || ''),
-              answers: this.answers.slice(),
-              result,
-              createdAt: Date.now(),
-            })
-            .then(() => {
-              wx.showToast({ title: '已提交给对方', icon: 'none' })
-            })
-            .catch(() => {
-              wx.showToast({ title: '互测结果提交失败', icon: 'none' })
-            })
-        }
+      const createdAt = Date.now()
+      app.globalData.pendingQuizPersist = {
+        mode: this.data.mode,
+        answers: this.answers.slice(),
+        result,
+        inviteId: this.inviteId || '',
+        createdAt,
       }
 
-      wx.redirectTo({ url: '/pages/result/index' })
+      const gd = app.globalData
+      const canPersist =
+        gd.authStatus === 'success' &&
+        gd.userId &&
+        hasUsableWechatProfile(gd.profile)
+
+      if (!canPersist) {
+        const step =
+          gd.authStatus === 'success' && gd.userId ? 'profile' : 'login'
+        wx.redirectTo({
+          url: `/pages/records-auth-hint/index?purpose=quiz&step=${step}`,
+        })
+        return
+      }
+
+      flushPendingQuizSubmit(app)
+        .then(() => wx.redirectTo({ url: '/pages/result/index' }))
+        .catch(() => wx.redirectTo({ url: '/pages/result/index' }))
       return
     }
 

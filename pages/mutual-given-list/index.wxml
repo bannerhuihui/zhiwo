@@ -1,0 +1,57 @@
+<view class="page">
+  <image class="bg" src="/images/question.png" mode="aspectFill" />
+  <view class="mask"></view>
+
+  <view class="stack">
+    <navigation-bar
+      title="我给好友的互测"
+      back="{{true}}"
+      color="rgba(0,0,0,0.72)"
+      background="transparent"
+    ></navigation-bar>
+
+    <view class="subtitle"><text>查看你曾为哪些好友完成互测作答。</text></view>
+
+    <scroll-view scroll-y class="list-scroll" enhanced show-scrollbar="{{false}}">
+      <view class="qy-scroll-fill" style="min-height: {{scrollInnerMinPx}}px;">
+        <view class="qy-scroll-fill__grow"></view>
+        <view class="qy-scroll-fill__main">
+          <view wx:if="{{!rows.length}}" class="empty-hint">
+            <text>暂无记录。完成好友分享的互测邀请后，会出现在这里。</text>
+          </view>
+          <block wx:for="{{rows}}" wx:key="id">
+            <view class="rec-card">
+              <view class="given-left">
+                <image
+                  wx:if="{{item.avatarUrl && !item.avatarLoadFailed}}"
+                  class="given-avatar"
+                  src="{{item.avatarUrl}}"
+                  mode="aspectFill"
+                  data-id="{{item.id}}"
+                  binderror="onOwnerAvatarError"
+                />
+                <view wx:else class="given-avatar given-avatar--ph"></view>
+                <view class="rec-main">
+                  <text class="given-title">好友：{{item.friendName}}</text>
+                  <view class="given-type-stack">
+                    <text class="rec-type">{{item.typeCode}}</text>
+                    <text class="rec-alias">{{item.alias}}</text>
+                  </view>
+                  <text class="rec-time">完成时间：{{item.timeText}}</text>
+                </view>
+              </view>
+              <view class="rec-actions">
+                <view class="btn-info" data-type="{{item.typeCode}}" bindtap="onOpenInfo">看说明</view>
+              </view>
+            </view>
+          </block>
+          <view class="list-footer-spacer"></view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="bottom-actions safe-bottom">
+      <view class="action-lemon" bindtap="onBackRecords">回到测试记录</view>
+    </view>
+  </view>
+</view>

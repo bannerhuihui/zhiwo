@@ -1,9 +1,27 @@
 const { analyzeComparison, buildComparisonText } = require('../../utils/compare')
 const { scrollInnerMinHeightPx } = require('../../utils/scroll-layout')
+const mbtiTypes = require('../../data/mbti-types')
 
 function truncateName(name) {
   if (!name) return '朋友'
   return name.length > 5 ? `${name.slice(0, 5)}...` : name
+}
+
+function typeAlias(code) {
+  if (!code || code === '--') return '—'
+  const u = String(code).trim().toUpperCase()
+  for (let i = 0; i < mbtiTypes.length; i += 1) {
+    if (mbtiTypes[i].type === u) return mbtiTypes[i].alias || u
+  }
+  return '未知类型'
+}
+
+/** 可跳转说明页的四字母类型，争议/不完整时返回空 */
+function normalizeInfoType(raw) {
+  if (!raw || raw === '--') return ''
+  const u = String(raw).trim().toUpperCase()
+  if (/^[EI][SN][TF][JP]$/.test(u)) return u
+  return ''
 }
 
 Page({
@@ -12,6 +30,8 @@ Page({
     friendName: '朋友',
     selfType: '--',
     mutualType: '--',
+    selfAlias: '—',
+    mutualAlias: '—',
     score: 0,
     title: '',
     lines: [],
@@ -35,6 +55,8 @@ Page({
         friendName,
         selfType,
         mutualType,
+        selfAlias: typeAlias(selfType),
+        mutualAlias: typeAlias(mutualType),
         score: analysis.score,
         title: analysis.title,
         lines: analysis.lines || [],
@@ -63,5 +85,22 @@ Page({
       data: t,
       success: () => wx.showToast({ title: '已复制', icon: 'none' }),
     })
+  },
+
+  onOpenSelfType() {
+    this._openTypeInfo(this.data.selfType)
+  },
+
+  onOpenMutualType() {
+    this._openTypeInfo(this.data.mutualType)
+  },
+
+  _openTypeInfo(rawType) {
+    const type = normalizeInfoType(rawType)
+    if (!type) {
+      wx.showToast({ title: '该类型暂无法查看说明', icon: 'none' })
+      return
+    }
+    wx.navigateTo({ url: `/pages/info/index?type=${encodeURIComponent(type)}` })
   },
 })
