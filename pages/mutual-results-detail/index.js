@@ -20,7 +20,51 @@ function showMutualTooFewThenBack() {
 function findSelfRecord(app, recordId) {
   const raw = app.globalData.records
   if (!Array.isArray(raw)) return null
-  return raw.find((r) => r.id === recordId) || null
+  const key = recordId != null ? String(recordId).trim() : ''
+  if (!key) return null
+  return raw.find((r) => r && String(r.id) === key) || null
+}
+
+/** 服务端/本地互测条目上的业务自测 id */
+function pickSelfTestId(mutualRaw) {
+  if (!mutualRaw || typeof mutualRaw !== 'object') return ''
+  const a = mutualRaw.selfTestId
+  const b = mutualRaw.self_test_id
+  if (a != null && String(a).trim()) return String(a).trim()
+  if (b != null && String(b).trim()) return String(b).trim()
+  return ''
+}
+
+/** 规范为四字母 EBTT，否则返回 '' */
+function normalizeLetterFour(raw) {
+  if (raw === null || raw === undefined || raw === '') return ''
+  const s = typeof raw === 'string' ? raw.trim().toUpperCase() : ''
+  if (s === '--') return ''
+  return /^[EI][SN][TF][JP]$/.test(s) ? s : ''
+}
+
+/** 用互测条目上的 selfTestId 对上「测试记录」，得到本条对应的自测类型；否则用兜底（当前页所选记录的自测）。 */
+function resolveViewerSelfFour(mutualRaw, app, pageSelfFallbackLetters) {
+  const sid = pickSelfTestId(mutualRaw)
+  if (sid && app && Array.isArray(app.globalData.records)) {
+    const rec = app.globalData.records.find((r) => r && String(r.id) === sid)
+    if (rec) {
+      const t = normalizeLetterFour(getRecordMbtiType(rec) || '')
+      if (t) return t
+    }
+  }
+  const fb = normalizeLetterFour(pageSelfFallbackLetters)
+  return fb || '--'
+}
+
+function resolveCompareSelfRecord(mutualRaw, app, viewerSelfFour) {
+  const sid = pickSelfTestId(mutualRaw)
+  if (!sid || !Array.isArray(app.globalData.records)) return null
+  const rec = app.globalData.records.find((r) => r && String(r.id) === sid)
+  if (rec) return rec
+  /** 记录在本地尚无（极少见）：用当前解析出的类型造最小上下文，对比页仍可算分 */
+  const t = normalizeLetterFour(viewerSelfFour) || '--'
+  return { id: sid, result: { type: t }, answers: [] }
 }
 
 function truncateName(name) {
@@ -48,10 +92,14 @@ function pickFriendField(raw, camel, snake) {
   return ''
 }
 
-function normalizeMutualItem(raw, index, selfType) {
+/** 单列页：兜底用页级自测字母；汇总页每条用 selfTestId 解析 */
+function normalizeMutualItem(raw, index, app, pageSelfLettersForFallback) {
   const id = raw.id || raw._id || `idx-${index}`
   const friendType = getRecordMbtiType(raw) || '--'
-  const same = !!selfType && selfType.length === 4 && friendType === selfType
+  const viewerSelfType = resolveViewerSelfFour(raw, app, pageSelfLettersForFallback)
+  const selfNorm = viewerSelfType === '--' ? '' : viewerSelfType
+  const friendNorm = /^[EI][SN][TF][JP]$/.test(String(friendType).toUpperCase()) ? friendType : ''
+  const same = !!(selfNorm && friendNorm && selfNorm === friendNorm)
   const nick = pickFriendField(raw, 'friendNickName', 'friend_nick_name')
   const avatar = publicAvatarUrl(pickFriendField(raw, 'friendAvatarUrl', 'friend_avatar_url'))
   return {
@@ -60,6 +108,7 @@ function normalizeMutualItem(raw, index, selfType) {
     friendAvatarUrl: avatar,
     friendAvatarLoadFailed: false,
     friendType,
+    viewerSelfType,
     timeText: formatTime(raw.createdAt),
     chipText: same ? '结果一致' : '结果不同',
     chipSame: same,
@@ -82,6 +131,15 @@ function mergeAllFromApi(app) {
   })
 }
 
+function selfTypeLettersFromFindRecord(rec) {
+  if (!rec) return '--'
+  const t =
+    normalizeLetterFour(getRecordMbtiType(rec) || '') ||
+    normalizeLetterFour((rec.result && rec.result.type) || '') ||
+    ''
+  return t || '--'
+}
+
 Page({
   data: {
     scrollInnerMinPx: 480,
@@ -89,7 +147,6 @@ Page({
     scopeAll: false,
     recordId: '',
     selfType: '--',
-    showSelfSub: true,
     backLabel: '返回测试记录',
     from: '',
     rows: [],
@@ -108,9 +165,10 @@ Page({
       this.setData(
         {
           scopeAll: true,
-          showSelfSub: false,
           backLabel: '返回汇总',
           from,
+          /** 汇总下列表每行用自己 selfTestId 解析；此项仅作占位，避免旧模板偶发取值异常 */
+          selfType: '--',
         },
         () => this._refreshScrollFill(),
       )
@@ -126,16 +184,19 @@ Page({
     }
     app.globalData._showMutualSelfResult = true
     const rec = findSelfRecord(app, recordId)
-    const selfType = (rec && rec.result && rec.result.type) || '--'
-    app.globalData.currentSelfRecord = rec || app.globalData.currentSelfRecord || { id: recordId, result: { type: selfType } }
+    const selfLetters = selfTypeLettersFromFindRecord(rec)
+    const selfTypeDisplay = selfLetters || '--'
+
+    /** 兜底：仅用 result.type、无四维时仍可展示 --，对比页仍可依赖互测条目 selfTestId */
+    app.globalData.currentSelfRecord =
+      rec || app.globalData.currentSelfRecord || { id: recordId, result: { type: selfTypeDisplay } }
 
     const backLabel = from === 'records' ? '返回测试记录' : '返回汇总'
     this.setData(
       {
         scopeAll: false,
         recordId,
-        selfType,
-        showSelfSub: true,
+        selfType: selfTypeDisplay,
         backLabel,
         from,
       },
@@ -149,10 +210,9 @@ Page({
   },
 
   _refreshScrollFill() {
-    const { showSelfSub } = this.data
     const px = scrollInnerMinHeightPx({
       bottomRpx: 16 + 116 + 24,
-      aboveScrollRpx: showSelfSub ? 88 : 0,
+      aboveScrollRpx: 0,
     })
     if (px !== this.data.scrollInnerMinPx) this.setData({ scrollInnerMinPx: px })
   },
@@ -161,8 +221,8 @@ Page({
     const app = getApp()
     const apply = (merged) => {
       app.globalData._mutualAllList = merged
-      const selfType = '--'
-      this.applyList(merged, selfType)
+      /** 汇总：每行 viewerSelfType 由互测条目 selfTestId + 本地 records 决定，不再传死 '--' 导致整页误判 */
+      this.applyList(merged, '--')
     }
 
     let merged = app.globalData._mutualAllList
@@ -186,8 +246,7 @@ Page({
 
   loadListSingle() {
     const app = getApp()
-    const { recordId } = this.data
-    const selfType = this.data.selfType
+    const { recordId, selfType } = this.data
 
     const cache = app.globalData._mutualResultsCache && app.globalData._mutualResultsCache[recordId]
     if (Array.isArray(cache)) {
@@ -213,7 +272,7 @@ Page({
       })
   },
 
-  applyList(arr, selfTypeForChip) {
+  applyList(arr, pageSelfLettersForChip) {
     if (!arr.length) {
       this.setData({ loading: false, rows: [] }, () => this._refreshScrollFill())
       return
@@ -225,7 +284,14 @@ Page({
       showMutualTooFewThenBack()
       return
     }
-    const rows = arr.map((item, i) => normalizeMutualItem(item, i, selfTypeForChip))
+    const app = getApp()
+    const pageFb = this.data.scopeAll
+      ? ''
+      : normalizeLetterFour(pageSelfLettersForChip) ||
+        normalizeLetterFour(this.data.selfType) ||
+        ''
+
+    const rows = arr.map((item, i) => normalizeMutualItem(item, i, app, pageFb))
     this.setData({ loading: false, rows }, () => this._refreshScrollFill())
   },
 
@@ -244,8 +310,27 @@ Page({
     const row = this.data.rows.find((r) => r.id === id)
     if (!row || !row.raw) return
     const app = getApp()
+    const fromRow = resolveCompareSelfRecord(row.raw, app, row.viewerSelfType)
+    const resolved =
+      fromRow ||
+      (this.data.recordId ? findSelfRecord(app, this.data.recordId) : null) ||
+      app.globalData.currentSelfRecord ||
+      null
+    const selfRecord =
+      resolved ||
+      (() => {
+        const sid = pickSelfTestId(row.raw)
+        const t = normalizeLetterFour(row.viewerSelfType) || '--'
+        return sid ? { id: sid, result: { type: t }, answers: [] } : null
+      })()
+
     app.globalData.compareContext = {
-      selfRecord: app.globalData.currentSelfRecord,
+      selfRecord:
+        selfRecord || {
+          id: pickSelfTestId(row.raw) || this.data.recordId || '',
+          result: { type: row.viewerSelfType === '--' ? '--' : row.viewerSelfType },
+          answers: [],
+        },
       mutualRecord: row.raw,
     }
     wx.navigateTo({ url: '/pages/compare/index' })

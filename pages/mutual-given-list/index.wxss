@@ -65,114 +65,142 @@ page {
   color: var(--qy-text-mute);
 }
 
-/* 与测试记录页 rec-card + rec-actions + btn-info 一致 */
-.rec-card {
+/* 与 mutual-results-detail 列表卡三区布局一致：头像 | 三行文案 | 标签+按钮 */
+.card {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  margin-bottom: 28rpx;
-  padding: 28rpx 32rpx 28rpx 28rpx;
-  box-sizing: border-box;
+  align-items: stretch;
+  margin-bottom: 24rpx;
+  padding: 24rpx 24rpx 24rpx 24rpx;
   background: rgba(255, 255, 255, 0.74);
   border-radius: 48rpx;
   border: 2rpx solid var(--qy-card-stroke);
-  box-shadow: 0 16rpx 16rpx rgba(0, 0, 0, 0.12);
+  box-shadow: 0 14rpx 14rpx rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
-.given-left {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-}
-
-.given-avatar {
+.avatar {
   width: 92rpx;
   height: 92rpx;
   border-radius: 50%;
   flex-shrink: 0;
   border: 2rpx solid rgba(255, 255, 255, 0.9);
+  align-self: center;
 }
 
-.given-avatar--ph {
+.avatar--ph {
   background: rgba(213, 241, 228, 0.9);
 }
 
-.rec-main {
+.card-mid {
   flex: 1;
   min-width: 0;
-  margin-left: 20rpx;
-}
-
-.given-title {
-  display: block;
-  font-size: 32rpx;
-  font-weight: 700;
-  color: rgba(40, 38, 36, 0.92);
-  line-height: 1.35;
-  margin-bottom: 16rpx;
-}
-
-.given-type-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6rpx;
-}
-
-.given-type-stack .rec-type {
-  display: block;
-  line-height: 1.1;
-}
-
-.given-type-stack .rec-alias {
-  display: block;
-  line-height: 1.25;
-}
-
-.rec-type {
-  font-size: 68rpx;
-  font-weight: 700;
-  color: rgba(0, 0, 0, 0.82);
-  line-height: 1.1;
-}
-
-.rec-alias {
-  font-size: 40rpx;
-  font-weight: 700;
-  color: var(--qy-link-strong);
-  line-height: 1.2;
-}
-
-.rec-time {
-  display: block;
-  margin-top: 16rpx;
-  font-size: 30rpx;
-  color: var(--qy-text-mute);
-}
-
-.rec-actions {
-  flex-shrink: 0;
-  width: 192rpx;
   margin-left: 20rpx;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 16rpx;
 }
 
-.btn-info {
-  height: 84rpx;
-  line-height: 84rpx;
-  text-align: center;
-  border-radius: 999rpx;
-  font-size: 34rpx;
+.mid-name {
+  display: block;
+  font-size: 44rpx;
   font-weight: 700;
   color: var(--qy-link-strong);
-  background: rgba(255, 255, 255, 0.9);
-  border: 2rpx solid rgba(224, 214, 182, 0.95);
+  line-height: 1.25;
+}
+
+.mid-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin-top: 10rpx;
+}
+
+.mid-label {
+  font-size: 28rpx;
+  color: var(--qy-text-mute);
+  line-height: 1.35;
+}
+
+.mid-code {
+  margin-left: 4rpx;
+  font-size: 38rpx;
+  font-weight: 700;
+  color: rgba(30, 30, 30, 0.9);
+  line-height: 1.25;
+}
+
+.mid-time {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  color: var(--qy-text-mute);
+  opacity: 0.9;
+}
+
+.card-tail {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 14rpx;
+  margin-left: 12rpx;
+  padding-left: 4rpx;
+  width: 176rpx;
+  min-width: 176rpx;
   box-sizing: border-box;
+}
+
+.tail-chip-wrap {
+  width: 100%;
+}
+
+.chip {
+  width: 100%;
+  height: 80rpx;
+  padding: 0 12rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.25;
+}
+
+.chip--same {
+  color: var(--qy-chip-same);
+  background: rgba(201, 239, 216, 0.98);
+  border: 2rpx solid rgba(151, 210, 177, 0.95);
+}
+
+.chip--diff {
+  color: var(--qy-chip-diff);
+  background: rgba(255, 228, 216, 0.98);
+  border: 2rpx solid rgba(240, 176, 150, 0.95);
+}
+
+.btn-analyze {
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+  background: rgba(198, 240, 219, 0.92);
+  border: 2rpx solid rgba(160, 215, 194, 0.95);
+  box-sizing: border-box;
+}
+
+.btn-analyze--hover {
+  opacity: 0.88;
 }
 
 .list-footer-spacer {

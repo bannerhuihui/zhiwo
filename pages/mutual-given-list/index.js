@@ -1,15 +1,7 @@
-const mbtiTypes = require('../../data/mbti-types')
 const api = require('../../utils/api')
+const { publicAvatarUrl } = require('../../utils/avatar-url')
 const { hasUsableWechatProfile } = require('../../utils/profile-guard')
 const { scrollInnerMinHeightPx } = require('../../utils/scroll-layout')
-
-function getTypeMeta(type) {
-  if (!type) return null
-  for (let i = 0; i < mbtiTypes.length; i += 1) {
-    if (mbtiTypes[i].type === type) return mbtiTypes[i]
-  }
-  return null
-}
 
 function pad(n) {
   return String(n).padStart(2, '0')
@@ -22,29 +14,49 @@ function formatTime(createdAt) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 
+/** 四位 MBTI */
+function normalizeFour(type) {
+  if (!type || typeof type !== 'string') return ''
+  const u = type.trim().toUpperCase()
+  return /^[EI][SN][TF][JP]$/.test(u) ? u : ''
+}
+
+function truncateName(name) {
+  const s = (name || '').trim()
+  if (!s) return '好友'
+  return s.length > 5 ? `${s.slice(0, 5)}...` : s
+}
+
+/** 与同页 mutual-results-detail 一致的列表项字段 + 跳转 compare 用 compare* */
 function mapRows(list) {
   if (!Array.isArray(list)) return []
   return list.map((item) => {
-    const type = (item.result && item.result.type) || ''
-    const meta = getTypeMeta(type)
-    const friendName = item.ownerNickName || item.targetName || '好友'
+    const ownerNickPlain =
+      `${item.ownerNickName || ''}`.trim() || `${item.targetName || ''}`.trim() || '好友'
+
+    const peerSelf = normalizeFour((item.ownerSelfResult && item.ownerSelfResult.type) || '')
+    const myMutual = normalizeFour((item.result && item.result.type) || '')
+    const chipSame = !!(peerSelf && myMutual && peerSelf === myMutual)
+
     return {
       id: item.id,
-      friendName,
-      avatarUrl: (item.ownerAvatarUrl && String(item.ownerAvatarUrl).trim()) || '',
-      avatarLoadFailed: false,
-      typeCode: type || '--',
-      alias: (meta && meta.alias) || '类型说明',
+      friendNickName: truncateName(ownerNickPlain),
+      friendAvatarUrl: publicAvatarUrl(`${item.ownerAvatarUrl || ''}`.trim()),
+      friendAvatarLoadFailed: false,
+      peerSelfType: peerSelf || '--',
+      chipText: chipSame ? '结果一致' : '结果不同',
+      chipSame,
       timeText: formatTime(item.createdAt),
+      compareSelfType: peerSelf || '--',
+      compareMutualType: myMutual || '--',
+      compareSubjectNick: ownerNickPlain,
     }
   })
 }
 
-/** 接口就绪后在此拉取并 setData rows */
 Page({
   data: {
     scrollInnerMinPx: 480,
-    /** { id, friendName, avatarUrl, avatarLoadFailed, typeCode, alias, timeText }[] */
     rows: [],
   },
 
@@ -88,22 +100,31 @@ Page({
     if (px !== this.data.scrollInnerMinPx) this.setData({ scrollInnerMinPx: px })
   },
 
-  onOwnerAvatarError(e) {
+  onFriendAvatarError(e) {
     const id = e.currentTarget.dataset.id
     if (!id) return
     const rows = this.data.rows.map((r) =>
-      r.id === id ? { ...r, avatarLoadFailed: true } : r,
+      r.id === id ? { ...r, friendAvatarLoadFailed: true } : r,
     )
     this.setData({ rows })
   },
 
-  onOpenInfo(e) {
-    const type = e.currentTarget.dataset.type
-    if (!type || type === '--') {
-      wx.showToast({ title: '暂无类型', icon: 'none' })
-      return
+  /** 与 mutual-results-detail 一致：写入 compareContext 后打开 compare */
+  onOpenCompare(e) {
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    const row = this.data.rows.find((r) => r.id === id)
+    if (!row) return
+    const app = getApp()
+    app.globalData.compareContext = {
+      comparisonVariant: 'mutual_given',
+      selfRecord: { id: String(id), result: { type: row.compareSelfType } },
+      mutualRecord: {
+        friendNickName: row.compareSubjectNick || '好友',
+        result: { type: row.compareMutualType },
+      },
     }
-    wx.navigateTo({ url: `/pages/info/index?type=${encodeURIComponent(type)}` })
+    wx.navigateTo({ url: '/pages/compare/index' })
   },
 
   onBackRecords() {

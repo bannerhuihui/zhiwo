@@ -169,3 +169,167 @@ page {
 .scroll-pad {
   height: 16rpx;
 }
+
+/* --------- 性格说明弹窗（知我几分分析页） --------- */
+.type-modal-root {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx 36rpx;
+  box-sizing: border-box;
+  pointer-events: auto;
+}
+
+.type-modal-backdrop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.type-modal-panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 704rpx;
+  max-height: 82vh;
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 40rpx;
+  border: 2rpx solid var(--qy-card-stroke);
+  box-shadow: 0 20rpx 48rpx rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.type-modal-bar {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 28rpx 20rpx;
+  border-bottom: 2rpx solid rgba(0, 0, 0, 0.06);
+}
+
+.type-modal-bar-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: rgba(40, 38, 36, 0.92);
+}
+
+.type-modal-bar-close {
+  padding: 8rpx 16rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+}
+
+/*
+ * scroll-view：真机必须由「确定的 height」（不能仅靠 max-height）撑开，
+ * 否则增强模式/.flex 父子下常为 0 高度 → 内容与工具表现不一致。
+ */
+.type-modal-scroll {
+  width: 100%;
+  min-height: 280rpx;
+  /* 不要用仅 max-height，避免真机算出 scroll-view 内容区高度为 0 */
+  height: 52vh;
+  max-height: 56vh;
+  box-sizing: border-box;
+}
+
+.type-modal-inner {
+  padding: 28rpx 28rpx 12rpx;
+  box-sizing: border-box;
+}
+
+.type-modal-type-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8rpx;
+}
+
+.type-modal-code {
+  font-size: 72rpx;
+  font-weight: 700;
+  color: rgba(30, 30, 30, 0.88);
+  line-height: 1.05;
+}
+
+.type-modal-alias {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+  line-height: 1.2;
+}
+
+.type-modal-keywords {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+.type-modal-kw {
+  padding: 0 18rpx;
+  height: 52rpx;
+  line-height: 52rpx;
+  border-radius: 999rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+  background: var(--qy-lemon);
+  box-sizing: border-box;
+}
+
+.type-modal-section {
+  margin-top: 28rpx;
+}
+
+.type-modal-st {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.76);
+  line-height: 1.35;
+}
+
+.type-modal-body {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 30rpx;
+  line-height: 1.55;
+  color: rgba(0, 0, 0, 0.62);
+}
+
+.type-modal-footer {
+  flex-shrink: 0;
+  padding: 16rpx 28rpx calc(20rpx + env(safe-area-inset-bottom));
+  border-top: 2rpx solid rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
+
+.type-modal-done {
+  height: 92rpx;
+  line-height: 92rpx;
+  text-align: center;
+  border-radius: 999rpx;
+  font-size: 38rpx;
+  font-weight: 700;
+  color: var(--qy-link-strong);
+  background: var(--qy-lemon);
+  border: 2rpx solid var(--qy-card-stroke);
+  box-sizing: border-box;
+}

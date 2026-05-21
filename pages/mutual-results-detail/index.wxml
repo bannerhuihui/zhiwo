@@ -22,9 +22,7 @@
       background="transparent"
     ></navigation-bar>
 
-    <view class="sub-line" wx:if="{{showSelfSub}}">你的自测结果：{{selfType}}</view>
-
-    <scroll-view wx:if="{{rows.length}}" scroll-y class="list-scroll" enhanced show-scrollbar="{{false}}">
+    <scroll-view wx:if="{{rows.length}}" scroll-y class="list-scroll" show-scrollbar="{{false}}">
       <view class="qy-scroll-fill" style="min-height: {{scrollInnerMinPx}}px;">
         <view class="qy-scroll-fill__grow"></view>
         <view class="qy-scroll-fill__main">
@@ -40,13 +38,25 @@
         <view wx:else class="avatar avatar--ph"></view>
 
         <view class="card-mid">
-          <text class="name">{{item.friendNickName}}</text>
-          <view class="chip {{item.chipSame ? 'chip--same' : 'chip--diff'}}">{{item.chipText}}</view>
-          <text class="result-line">TA眼中的你：{{item.friendType}}</text>
-          <text class="time-line" wx:if="{{item.timeText}}">{{item.timeText}}</text>
+          <text class="mid-name">{{item.friendNickName}}</text>
+          <view class="mid-row">
+            <text class="mid-label">朋友测试结果：</text>
+            <text class="mid-code">{{item.friendType}}</text>
+          </view>
+          <view class="mid-row">
+            <text class="mid-label">本人测试结果：</text>
+            <text class="mid-code">{{item.viewerSelfType}}</text>
+          </view>
+          <text class="mid-time" wx:if="{{item.timeText}}">{{item.timeText}}</text>
         </view>
 
-        <view class="btn-analyze" data-id="{{item.id}}" bindtap="onOpenCompare">看分析</view>
+        <view class="card-tail">
+          <view class="tail-chip-wrap">
+            <view class="chip {{item.chipSame ? 'chip--same' : 'chip--diff'}}">{{item.chipText}}</view>
+          </view>
+          <view class="btn-analyze" hover-class="btn-analyze--hover" data-id="{{item.id}}" catchtap="onOpenCompare"
+            >看分析</view>
+        </view>
       </view>
       <view class="list-pad"></view>
         </view>

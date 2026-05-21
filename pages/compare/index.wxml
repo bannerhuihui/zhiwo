@@ -16,7 +16,7 @@
             hover-class="types-col--tap-hover"
             bindtap="onOpenSelfType"
           >
-            <text class="types-label">你的自测</text>
+            <text class="types-label">{{selfTypesLabel}}</text>
             <text class="types-code">{{selfType}}</text>
             <text class="types-alias">{{selfAlias}}</text>
           </view>
@@ -25,7 +25,7 @@
             hover-class="types-col--tap-hover"
             bindtap="onOpenMutualType"
           >
-            <text class="types-label">{{friendName}}眼中的你</text>
+            <text class="types-label">{{mutualTypesLabel}}</text>
             <text class="types-code">{{mutualType}}</text>
             <text class="types-alias">{{mutualAlias}}</text>
           </view>
@@ -47,5 +47,42 @@
         </view>
       </view>
     </scroll-view>
+  </view>
+
+  <!-- 性格说明弹窗（与 info 页同源数据，仅占位本页交互） -->
+  <view wx:if="{{typeModalVisible && modalTypeItem}}" class="type-modal-root" catchtouchmove="onTypeModalCatchMove">
+    <view class="type-modal-backdrop" bindtap="onCloseTypeModal"></view>
+    <view class="type-modal-panel">
+      <view class="type-modal-bar">
+        <text class="type-modal-bar-title">性格类型说明</text>
+        <text class="type-modal-bar-close" bindtap="onCloseTypeModal">关闭</text>
+      </view>
+      <scroll-view scroll-y class="type-modal-scroll" show-scrollbar="{{false}}">
+        <view class="type-modal-inner">
+          <view class="type-modal-type-row">
+            <text class="type-modal-code">{{modalTypeItem.type}}</text>
+            <text class="type-modal-alias">{{modalTypeItem.alias}}</text>
+          </view>
+          <view wx:if="{{modalTypeItem.keywords.length > 0}}" class="type-modal-keywords">
+            <view class="type-modal-kw" wx:for="{{modalTypeItem.keywords}}" wx:key="*this">{{item}}</view>
+          </view>
+          <view class="type-modal-section">
+            <text class="type-modal-st">类型简介</text>
+            <text class="type-modal-body">{{modalTypeItem.summary}}</text>
+          </view>
+          <view class="type-modal-section">
+            <text class="type-modal-st">性格优势</text>
+            <text class="type-modal-body">{{modalTypeItem.strengths}}</text>
+          </view>
+          <view class="type-modal-section">
+            <text class="type-modal-st">适合方向</text>
+            <text class="type-modal-body">{{modalTypeItem.fit}}</text>
+          </view>
+        </view>
+      </scroll-view>
+      <view class="type-modal-footer">
+        <view class="type-modal-done" bindtap="onCloseTypeModal">知道了</view>
+      </view>
+    </view>
   </view>
 </view>

@@ -10,41 +10,48 @@
       background="transparent"
     ></navigation-bar>
 
-    <view class="subtitle"><text>查看你曾为哪些好友完成互测作答。</text></view>
+    <view class="subtitle"><text>查看你为好友作答的互测，及与对方自测的认知差异。</text></view>
 
-    <scroll-view scroll-y class="list-scroll" enhanced show-scrollbar="{{false}}">
+    <scroll-view scroll-y class="list-scroll" show-scrollbar="{{false}}">
       <view class="qy-scroll-fill" style="min-height: {{scrollInnerMinPx}}px;">
         <view class="qy-scroll-fill__grow"></view>
         <view class="qy-scroll-fill__main">
           <view wx:if="{{!rows.length}}" class="empty-hint">
             <text>暂无记录。完成好友分享的互测邀请后，会出现在这里。</text>
           </view>
-          <block wx:for="{{rows}}" wx:key="id">
-            <view class="rec-card">
-              <view class="given-left">
-                <image
-                  wx:if="{{item.avatarUrl && !item.avatarLoadFailed}}"
-                  class="given-avatar"
-                  src="{{item.avatarUrl}}"
-                  mode="aspectFill"
-                  data-id="{{item.id}}"
-                  binderror="onOwnerAvatarError"
-                />
-                <view wx:else class="given-avatar given-avatar--ph"></view>
-                <view class="rec-main">
-                  <text class="given-title">好友：{{item.friendName}}</text>
-                  <view class="given-type-stack">
-                    <text class="rec-type">{{item.typeCode}}</text>
-                    <text class="rec-alias">{{item.alias}}</text>
-                  </view>
-                  <text class="rec-time">完成时间：{{item.timeText}}</text>
-                </view>
+          <!-- 卡片样式与同项目 mutual-results-detail「朋友们眼中的你」列表对齐 -->
+          <view class="card" wx:for="{{rows}}" wx:key="id">
+            <image
+              wx:if="{{item.friendAvatarUrl && !item.friendAvatarLoadFailed}}"
+              class="avatar"
+              src="{{item.friendAvatarUrl}}"
+              mode="aspectFill"
+              data-id="{{item.id}}"
+              binderror="onFriendAvatarError"
+            />
+            <view wx:else class="avatar avatar--ph"></view>
+
+            <view class="card-mid">
+              <text class="mid-name">{{item.friendNickName}}</text>
+              <view class="mid-row">
+                <text class="mid-label">朋友测试结果：</text>
+                <text class="mid-code">{{item.peerSelfType}}</text>
               </view>
-              <view class="rec-actions">
-                <view class="btn-info" data-type="{{item.typeCode}}" bindtap="onOpenInfo">看说明</view>
+              <view class="mid-row">
+                <text class="mid-label">本人测试结果：</text>
+                <text class="mid-code">{{item.compareMutualType}}</text>
               </view>
+              <text class="mid-time" wx:if="{{item.timeText}}">{{item.timeText}}</text>
             </view>
-          </block>
+
+            <view class="card-tail">
+              <view class="tail-chip-wrap">
+                <view class="chip {{item.chipSame ? 'chip--same' : 'chip--diff'}}">{{item.chipText}}</view>
+              </view>
+              <view class="btn-analyze" hover-class="btn-analyze--hover" data-id="{{item.id}}" catchtap="onOpenCompare"
+                >看分析</view>
+            </view>
+          </view>
           <view class="list-footer-spacer"></view>
         </view>
       </view>

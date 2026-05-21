@@ -48,12 +48,6 @@ page {
   color: var(--qy-text-mute);
 }
 
-.sub-line {
-  padding: 4rpx 40rpx 20rpx;
-  font-size: 36rpx;
-  color: var(--qy-text-mute);
-}
-
 .list-scroll {
   flex: 1;
   min-height: 0;
@@ -65,10 +59,9 @@ page {
 .card {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  min-height: 212rpx;
+  align-items: stretch;
   margin-bottom: 24rpx;
-  padding: 24rpx 28rpx 24rpx 24rpx;
+  padding: 24rpx 24rpx 24rpx 24rpx;
   background: rgba(255, 255, 255, 0.74);
   border-radius: 48rpx;
   border: 2rpx solid var(--qy-card-stroke);
@@ -82,6 +75,7 @@ page {
   border-radius: 50%;
   flex-shrink: 0;
   border: 2rpx solid rgba(255, 255, 255, 0.9);
+  align-self: center;
 }
 
 .avatar--ph {
@@ -92,26 +86,82 @@ page {
   flex: 1;
   min-width: 0;
   margin-left: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.name {
+.mid-name {
   display: block;
   font-size: 44rpx;
   font-weight: 700;
   color: var(--qy-link-strong);
-  line-height: 1.2;
+  line-height: 1.25;
+}
+
+.mid-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin-top: 10rpx;
+}
+
+.mid-label {
+  font-size: 28rpx;
+  color: var(--qy-text-mute);
+  line-height: 1.35;
+}
+
+.mid-code {
+  margin-left: 4rpx;
+  font-size: 38rpx;
+  font-weight: 700;
+  color: rgba(30, 30, 30, 0.9);
+  line-height: 1.25;
+}
+
+.mid-time {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  color: var(--qy-text-mute);
+  opacity: 0.9;
+}
+
+/* 三区：头像 | 文案 | 标签+按钮（胶囊与按钮同宽同高） */
+.card-tail {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 14rpx;
+  margin-left: 12rpx;
+  padding-left: 4rpx;
+  width: 176rpx;
+  min-width: 176rpx;
+  box-sizing: border-box;
+}
+
+.tail-chip-wrap {
+  width: 100%;
 }
 
 .chip {
-  display: inline-block;
-  margin-top: 12rpx;
-  padding: 0 18rpx;
-  height: 48rpx;
-  line-height: 48rpx;
+  width: 100%;
+  height: 80rpx;
+  padding: 0 12rpx;
   border-radius: 999rpx;
-  font-size: 22rpx;
+  font-size: 28rpx;
   font-weight: 700;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.25;
 }
 
 .chip--same {
@@ -126,35 +176,22 @@ page {
   border: 2rpx solid rgba(240, 176, 150, 0.95);
 }
 
-.result-line {
-  display: block;
-  margin-top: 12rpx;
-  font-size: 36rpx;
-  color: var(--qy-text-mute);
-}
-
-.time-line {
-  display: block;
-  margin-top: 6rpx;
-  font-size: 28rpx;
-  color: var(--qy-text-mute);
-  opacity: 0.85;
-}
-
 .btn-analyze {
-  flex-shrink: 0;
-  width: 200rpx;
-  height: 84rpx;
-  line-height: 84rpx;
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
   text-align: center;
-  margin-left: 16rpx;
   border-radius: 999rpx;
-  font-size: 40rpx;
+  font-size: 28rpx;
   font-weight: 700;
   color: var(--qy-link-strong);
   background: rgba(198, 240, 219, 0.92);
   border: 2rpx solid rgba(160, 215, 194, 0.95);
   box-sizing: border-box;
+}
+
+.btn-analyze--hover {
+  opacity: 0.88;
 }
 
 .list-pad {

@@ -16,7 +16,7 @@ function typeAlias(code) {
   return '未知类型'
 }
 
-/** 可跳转说明页的四字母类型，争议/不完整时返回空 */
+/** 可展示说明的四字母 MBTI；争议/不完整时返回空字符串 */
 function normalizeInfoType(raw) {
   if (!raw || raw === '--') return ''
   const u = String(raw).trim().toUpperCase()
@@ -24,9 +24,32 @@ function normalizeInfoType(raw) {
   return ''
 }
 
+/** 规范化并从本地数据中取出详情；找不到时返回 null */
+function findTypeDetail(raw) {
+  const u = normalizeInfoType(raw)
+  if (!u) return null
+  for (let i = 0; i < mbtiTypes.length; i += 1) {
+    if (mbtiTypes[i].type === u) {
+      const row = mbtiTypes[i]
+      return {
+        type: row.type,
+        alias: row.alias || '',
+        keywords: Array.isArray(row.keywords) ? row.keywords : [],
+        summary: row.summary || '',
+        strengths: row.strengths || '',
+        fit: row.fit || '',
+      }
+    }
+  }
+  return null
+}
+
 Page({
   data: {
     scrollInnerMinPx: 480,
+    /** 双侧类型区标题（默认可来自 compareContext.selfTypesLabel 等覆盖） */
+    selfTypesLabel: '你的自测',
+    mutualTypesLabel: '朋友眼中的你',
     friendName: '朋友',
     selfType: '--',
     mutualType: '--',
@@ -35,6 +58,8 @@ Page({
     score: 0,
     title: '',
     lines: [],
+    typeModalVisible: false,
+    modalTypeItem: null,
   },
 
   onLoad() {
@@ -45,13 +70,33 @@ Page({
       setTimeout(() => wx.navigateBack(), 400)
       return
     }
+    const comparisonVariant =
+      ctx.comparisonVariant === 'mutual_given' ? 'mutual_given' : 'default'
+
     const selfType = (ctx.selfRecord.result && ctx.selfRecord.result.type) || '--'
     const mutualType = (ctx.mutualRecord.result && ctx.mutualRecord.result.type) || '--'
     const friendName = truncateName(ctx.mutualRecord.friendNickName || '朋友')
-    const analysis = analyzeComparison(selfType, mutualType)
-    this._copyText = buildComparisonText(selfType, mutualType, friendName)
+
+    let selfTypesLabel = '你的自测'
+    let mutualTypesLabel = `${friendName}眼中的你`
+    if (comparisonVariant === 'mutual_given') {
+      selfTypesLabel = '对方的自测'
+      mutualTypesLabel = '你给 TA 的互测'
+    }
+    if (typeof ctx.selfTypesLabel === 'string' && ctx.selfTypesLabel.trim()) {
+      selfTypesLabel = ctx.selfTypesLabel.trim()
+    }
+    if (typeof ctx.mutualTypesLabel === 'string' && ctx.mutualTypesLabel.trim()) {
+      mutualTypesLabel = ctx.mutualTypesLabel.trim()
+    }
+
+    const analysis = analyzeComparison(selfType, mutualType, comparisonVariant)
+    this._copyText = buildComparisonText(selfType, mutualType, friendName, comparisonVariant)
+
     this.setData(
       {
+        selfTypesLabel,
+        mutualTypesLabel,
         friendName,
         selfType,
         mutualType,
@@ -96,11 +141,24 @@ Page({
   },
 
   _openTypeInfo(rawType) {
-    const type = normalizeInfoType(rawType)
-    if (!type) {
+    const detail = findTypeDetail(rawType)
+    if (!detail) {
       wx.showToast({ title: '该类型暂无法查看说明', icon: 'none' })
       return
     }
-    wx.navigateTo({ url: `/pages/info/index?type=${encodeURIComponent(type)}` })
+    this.setData({
+      typeModalVisible: true,
+      modalTypeItem: detail,
+    })
   },
+
+  onCloseTypeModal() {
+    this.setData({
+      typeModalVisible: false,
+      modalTypeItem: null,
+    })
+  },
+
+  /** 仅供弹层面板拦截，减少底层页面误触滚动 */
+  onTypeModalCatchMove() {},
 })
